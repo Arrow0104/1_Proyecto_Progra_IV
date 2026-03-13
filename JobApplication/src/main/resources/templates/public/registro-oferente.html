@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro de Oferente — Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Registro de Oferente</h1>
+
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+  <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+
+  <div class="card" style="max-width:700px;margin:0 auto;">
+    <form th:action="@{/registro/oferente}" method="post">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" class="form-control"
+                 placeholder="Juan" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="apellido">Primer Apellido</label>
+          <input type="text" id="apellido" name="apellido" class="form-control"
+                 placeholder="Pérez" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="numIdentificacion">Número de Identificación</label>
+          <input type="text" id="numIdentificacion" name="numIdentificacion" class="form-control"
+                 placeholder="1-0000-0000" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="nacionalidad">Nacionalidad</label>
+          <input type="text" id="nacionalidad" name="nacionalidad" class="form-control"
+                 placeholder="Costarricense" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="correo">Correo Electrónico</label>
+          <input type="email" id="correo" name="correo" class="form-control"
+                 placeholder="juan@correo.com" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" class="form-control"
+                 placeholder="8888-0000" required/>
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label class="form-label" for="residencia">Lugar de Residencia</label>
+          <input type="text" id="residencia" name="residencia" class="form-control"
+                 placeholder="San José, Costa Rica" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">Contraseña</label>
+          <input type="password" id="password" name="password" class="form-control"
+                 placeholder="Mínimo 8 caracteres" minlength="8" required/>
+        </div>
+      </div>
+      <div class="flex gap-1 mt-2">
+        <button type="submit" class="btn btn-primary">Registrar Oferente</button>
+        <a th:href="@{/}" class="btn btn-outline">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

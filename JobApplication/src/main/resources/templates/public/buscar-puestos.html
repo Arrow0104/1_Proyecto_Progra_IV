@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buscar Puestos — Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Buscar Puestos por Características</h1>
+
+  <div style="display:grid;grid-template-columns:280px 1fr;gap:2rem;align-items:start;">
+
+    <!-- Panel de filtros -->
+    <div class="card">
+      <h3 style="margin-bottom:1rem;color:var(--accent);">Filtrar por Habilidades</h3>
+      <form th:action="@{/puestos/buscar}" method="get">
+        <ul class="tree-list">
+          <li th:each="raiz : ${raices}" class="tree-parent">
+            <label style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;">
+              <span th:text="${raiz.nombre}">Categoría</span>
+            </label>
+            <ul class="tree-children" th:if="${raiz.hijos != null and !raiz.hijos.empty}">
+              <li th:each="hijo : ${raiz.hijos}">
+                <label>
+                  <input type="checkbox" name="caracteristicas"
+                         th:value="${hijo.idCaracteristica}"
+                         th:checked="${seleccionadas != null and seleccionadas.contains(hijo.idCaracteristica)}"/>
+                  <span th:text="${hijo.nombre}">Habilidad</span>
+                </label>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <hr class="divider"/>
+        <div class="flex gap-1">
+          <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+          <a th:href="@{/puestos/buscar}" class="btn btn-outline btn-sm">Limpiar</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Resultados -->
+    <div>
+      <h2 style="margin-bottom:1rem;" th:if="${resultados != null}">
+        Resultados
+        <span class="text-muted" style="font-size:0.9rem;font-family:var(--font-body);font-weight:400;"
+              th:text="'(' + ${resultados.size()} + ' puesto(s) encontrado(s))'"></span>
+      </h2>
+      <p th:if="${resultados == null}" class="text-muted">Seleccione características y haga clic en Buscar.</p>
+
+      <div class="card-grid" th:if="${resultados != null and !resultados.empty}">
+        <div th:each="puesto : ${resultados}" class="card">
+          <p class="card-subtitle" th:text="${puesto.empresa.nombre}">Empresa</p>
+          <h3 class="card-title" th:text="${puesto.titulo}">Título</h3>
+          <p class="card-salary" th:text="'₡ ' + ${#numbers.formatDecimal(puesto.salario, 1, 'COMMA', 2, 'POINT')}">₡0</p>
+          <a th:href="@{/puestos/{id}(id=${puesto.idPuesto})}" class="btn btn-outline btn-sm">Ver Detalle</a>
+        </div>
+      </div>
+
+      <div class="alert alert-warning" th:if="${resultados != null and resultados.empty}">
+        No se encontraron puestos con las características seleccionadas.
+      </div>
+    </div>
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

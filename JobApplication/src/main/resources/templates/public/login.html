@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iniciar Sesión — Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-icon">👤</div>
+    <h2>Iniciar Sesión</h2>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+
+    <form th:action="@{/login}" method="post">
+      <div class="form-group">
+        <label class="form-label" for="username">Usuario (correo o identificación)</label>
+        <input type="text" id="username" name="username" class="form-control"
+               placeholder="correo@empresa.com o identificación" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Contraseña</label>
+        <input type="password" id="password" name="password" class="form-control"
+               placeholder="••••••••" required/>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 btn-lg" style="margin-top:0.5rem;">
+        Entrar
+      </button>
+    </form>
+
+    <hr class="divider"/>
+    <p class="text-muted" style="text-align:center;font-size:0.88rem;">
+      ¿No tiene cuenta?
+      <a th:href="@{/registro/empresa}">Registrar Empresa</a> ·
+      <a th:href="@{/registro/oferente}">Registrar Oferente</a>
+    </p>
+  </div>
+</div>
+
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

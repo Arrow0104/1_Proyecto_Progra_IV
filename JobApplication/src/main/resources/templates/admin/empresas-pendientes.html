@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Empresas Pendientes — Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Empresas Pendientes de Aprobación</h1>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+      <tr>
+        <th>Usuario (Correo)</th>
+        <th>Fecha de Registro</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="u : ${usuarios}">
+        <td th:text="${u.correo}" class="fw-bold">correo</td>
+        <td th:text="${#temporals.format(u.fechaCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+        <td><span class="badge badge-warning">Pendiente</span></td>
+        <td>
+          <form th:action="@{/admin/empresas/aprobar/{id}(id=${u.idUsuario})}"
+                method="post" style="margin:0;">
+            <button type="submit" class="btn btn-success btn-sm">Aprobar y Activar</button>
+          </form>
+        </td>
+      </tr>
+      <tr th:if="${usuarios == null or usuarios.empty}">
+        <td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem;">
+          No hay empresas pendientes de aprobación.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-2">
+    <a th:href="@{/admin/dashboard}" class="btn btn-outline">← Volver al Dashboard</a>
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

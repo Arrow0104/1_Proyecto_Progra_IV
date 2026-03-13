@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Administrador — Dashboard · Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Administrador</h1>
+  <p class="text-sec" style="margin-bottom:1.5rem;">Aprobaciones, catálogo de características y reportes.</p>
+
+  <div class="dashboard-grid">
+    <a th:href="@{/admin/empresas/pendientes}" class="stat-card" style="text-decoration:none;display:block;">
+      <div class="stat-number" th:text="${pendientesEmpresa}">0</div>
+      <div class="stat-label">Empresas Pendientes</div>
+    </a>
+    <a th:href="@{/admin/oferentes/pendientes}" class="stat-card" style="text-decoration:none;display:block;">
+      <div class="stat-number" th:text="${pendientesOferente}">0</div>
+      <div class="stat-label">Oferentes Pendientes</div>
+    </a>
+    <a th:href="@{/admin/caracteristicas}" class="stat-card" style="text-decoration:none;display:block;">
+      <div class="stat-number">📋</div>
+      <div class="stat-label">Características</div>
+    </a>
+    <a th:href="@{/admin/reportes/puestos}" class="stat-card" style="text-decoration:none;display:block;">
+      <div class="stat-number">📊</div>
+      <div class="stat-label">Reportes PDF</div>
+    </a>
+  </div>
+
+  <div class="flex gap-1 mt-3" style="flex-wrap:wrap;">
+    <a th:href="@{/admin/empresas/pendientes}"  class="btn btn-primary">Empresas Pendientes</a>
+    <a th:href="@{/admin/oferentes/pendientes}" class="btn btn-outline">Oferentes Pendientes</a>
+    <a th:href="@{/admin/caracteristicas}"       class="btn btn-outline">Características</a>
+    <a th:href="@{/admin/reportes/puestos}"      class="btn btn-outline">Reportes</a>
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

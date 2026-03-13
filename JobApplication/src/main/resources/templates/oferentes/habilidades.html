@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mis Habilidades — Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Mis Habilidades</h1>
+
+  <div style="display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start;">
+
+    <!-- Habilidades actuales -->
+    <div>
+      <h2 style="margin-bottom:1rem;font-size:1.2rem;">Habilidades Registradas</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+          <tr>
+            <th>Característica</th>
+            <th>Ruta</th>
+            <th>Nivel (1–5)</th>
+            <th>Eliminar</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="h : ${habilidades}">
+            <td th:text="${h.caracteristica.nombre}" class="fw-bold">Habilidad</td>
+            <td class="text-muted" style="font-size:0.83rem;">
+                                <span th:if="${h.caracteristica.padre != null}"
+                                      th:text="${h.caracteristica.padre.nombre} + ' / '">Cat / </span>
+              <span th:text="${h.caracteristica.nombre}">Habilidad</span>
+            </td>
+            <td><span class="badge badge-info" th:text="${h.nivel}">0</span></td>
+            <td>
+              <form th:action="@{/oferente/habilidades/eliminar}" method="post" style="margin:0;">
+                <input type="hidden" name="idCaracteristica"
+                       th:value="${h.caracteristica.idCaracteristica}"/>
+                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${habilidades == null or habilidades.empty}">
+            <td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem;">
+              No ha registrado habilidades aún.
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Agregar habilidad -->
+    <div class="card">
+      <h3 style="color:var(--accent);margin-bottom:1rem;">Agregar Habilidad</h3>
+      <form th:action="@{/oferente/habilidades/agregar}" method="post">
+        <div class="form-group">
+          <label class="form-label" for="idCaracteristica">Característica</label>
+          <select id="idCaracteristica" name="idCaracteristica" class="form-control" required>
+            <option value="">— Seleccione —</option>
+            <th:block th:each="raiz : ${raices}">
+              <optgroup th:label="${raiz.nombre}">
+                <option th:each="hijo : ${raiz.hijos}"
+                        th:if="${raiz.hijos != null}"
+                        th:value="${hijo.idCaracteristica}"
+                        th:text="${hijo.nombre}">Habilidad</option>
+              </optgroup>
+            </th:block>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="nivel">Nivel de Dominio (1 = básico, 5 = experto)</label>
+          <select id="nivel" name="nivel" class="form-control" required>
+            <option value="1">1 — Básico</option>
+            <option value="2">2 — Elemental</option>
+            <option value="3">3 — Intermedio</option>
+            <option value="4">4 — Avanzado</option>
+            <option value="5">5 — Experto</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Agregar Habilidad</button>
+      </form>
+    </div>
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

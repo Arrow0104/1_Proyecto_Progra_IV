@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi Currículo — Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Mi Currículo (CV)</h1>
+
+  <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+
+  <div class="card" style="max-width:520px;">
+    <h3 style="margin-bottom:1rem;">Estado actual del Currículo</h3>
+    <p th:if="${oferente.cvPath != null}" class="text-success" style="margin-bottom:1rem;">
+      ✓ Currículo cargado correctamente.
+      <a th:href="@{'/uploads/cv/cv_' + ${oferente.idOferente} + '.pdf'}"
+         target="_blank" class="btn btn-outline btn-sm" style="margin-left:0.5rem;">Ver PDF</a>
+    </p>
+    <p th:if="${oferente.cvPath == null}" class="text-muted" style="margin-bottom:1rem;">
+      No ha subido su currículo aún.
+    </p>
+
+    <hr class="divider"/>
+    <h3 style="margin-bottom:1rem;">Subir / Actualizar Currículo</h3>
+    <form th:action="@{/oferente/cv/subir}" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label class="form-label" for="archivo">Archivo PDF (máx. 5 MB)</label>
+        <input type="file" id="archivo" name="archivo" class="form-control"
+               accept="application/pdf" required
+               style="padding:0.5rem;cursor:pointer;"/>
+      </div>
+      <button type="submit" class="btn btn-primary">Subir Currículo</button>
+    </form>
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

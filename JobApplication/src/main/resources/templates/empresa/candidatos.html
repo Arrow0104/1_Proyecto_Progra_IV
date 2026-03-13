@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Candidatos — Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Candidatos para el Puesto</h1>
+  <p class="text-sec" style="margin-bottom:1.5rem;">
+    Puesto: <strong th:text="${puesto.titulo}" class="text-accent">Título</strong>
+  </p>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+      <tr>
+        <th>Oferente</th>
+        <th>Requisitos Cumplidos</th>
+        <th>% de Coincidencia</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="c : ${candidatos}">
+        <td th:text="${c.oferente.nombreCompleto}" class="fw-bold">Nombre</td>
+        <td th:text="${c.cumplidos} + ' / ' + ${c.total}">0/0</td>
+        <td>
+          <span th:text="${c.porcentaje}" class="text-accent fw-bold">0%</span>
+        </td>
+        <td>
+          <a th:href="@{/empresa/candidatos/{id}(id=${c.oferente.idOferente})}"
+             class="btn btn-outline btn-sm">Ver Detalle</a>
+        </td>
+      </tr>
+      <tr th:if="${candidatos == null or candidatos.empty}">
+        <td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem;">
+          No se encontraron candidatos compatibles.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-2">
+    <a th:href="@{/empresa/puestos}" class="btn btn-outline">← Volver a Mis Puestos</a>
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

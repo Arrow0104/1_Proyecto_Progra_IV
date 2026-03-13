@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oferente — Dashboard · Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Oferente — Dashboard</h1>
+  <p class="text-sec" style="margin-bottom:1.5rem;">
+    Bienvenido, <strong th:text="${oferente.nombreCompleto}" class="text-accent">Nombre</strong>.
+    Administre sus habilidades y su currículo desde aquí.
+  </p>
+  <div class="flex gap-1" style="flex-wrap:wrap;">
+    <a th:href="@{/oferente/habilidades}" class="btn btn-primary btn-lg">Mis Habilidades</a>
+    <a th:href="@{/oferente/cv}"          class="btn btn-outline btn-lg">Mi Currículo (CV)</a>
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

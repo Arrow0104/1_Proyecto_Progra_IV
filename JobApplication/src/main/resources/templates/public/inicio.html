@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+
+<main class="main-content">
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Bolsa de Empleo</h1>
+    <p>Conectamos empresas con talento. Encuentra el puesto perfecto o al candidato ideal.</p>
+    <div class="flex gap-1 mt-3" style="flex-wrap:wrap;">
+      <a th:href="@{/puestos/buscar}" class="btn btn-primary btn-lg">Buscar Puestos</a>
+      <a th:href="@{/registro/empresa}" class="btn btn-outline btn-lg">Registrar Empresa</a>
+      <a th:href="@{/registro/oferente}" class="btn btn-outline btn-lg">Registrar Oferente</a>
+    </div>
+  </section>
+
+  <!-- Últimos 5 puestos públicos -->
+  <h2 style="margin-bottom:0.3rem;">Últimos 5 Puestos Públicos</h2>
+  <p class="text-sec" style="margin-bottom:1.5rem;font-size:0.9rem;">Pase el cursor sobre una tarjeta para ver los requisitos.</p>
+
+  <div class="card-grid">
+    <div th:each="puesto : ${puestos}" class="puesto-card-wrapper">
+      <div class="card">
+        <p class="card-subtitle" th:text="${puesto.empresa.nombre}">Empresa</p>
+        <h3 class="card-title" th:text="${puesto.titulo}">Título</h3>
+        <p class="card-salary" th:text="'₡ ' + ${#numbers.formatDecimal(puesto.salario, 1, 'COMMA', 2, 'POINT')}">₡0</p>
+        <a th:href="@{/puestos/{id}(id=${puesto.idPuesto})}" class="btn btn-outline btn-sm">Ver Detalle</a>
+
+        <!-- Tooltip con características -->
+        <div class="puesto-tooltip">
+          <strong th:text="${puesto.titulo}">Puesto</strong>
+          <ul th:if="${puesto.caracteristicas != null and !puesto.caracteristicas.empty}">
+            <li th:each="pc : ${puesto.caracteristicas}"
+                th:text="${pc.caracteristica.nombre} + ' (nivel ' + ${pc.nivelRequerido} + ')'">Req</li>
+          </ul>
+          <p th:if="${puesto.caracteristicas == null or puesto.caracteristicas.empty}"
+             class="text-muted" style="font-size:0.82rem;margin-top:0.4rem;">Sin requisitos específicos</p>
+        </div>
+      </div>
+    </div>
+
+    <p th:if="${puestos == null or puestos.empty}" class="text-muted">No hay puestos disponibles aún.</p>
+  </div>
+
+</main>
+
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

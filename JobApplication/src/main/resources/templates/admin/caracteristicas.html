@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Características — Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Gestión de Características</h1>
+
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:2rem;align-items:start;">
+
+    <!-- Árbol de características -->
+    <div>
+      <!-- Mostrar raíces y permitir navegar -->
+      <div class="card" th:if="${padreActual == null}">
+        <h3 style="margin-bottom:1rem;color:var(--accent);">Categorías Raíz</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+            <tr>
+              <th>Nombre de la Categoría</th>
+              <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${raices}">
+              <td th:text="${r.nombre}" class="fw-bold">Categoría</td>
+              <td>
+                <div class="flex gap-1">
+                  <a th:href="@{/admin/caracteristicas(padreId=${r.idCaracteristica})}"
+                     class="btn btn-outline btn-sm">Entrar</a>
+                  <form th:action="@{/admin/caracteristicas/eliminar/{id}(id=${r.idCaracteristica})}"
+                        method="post" style="margin:0;">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <tr th:if="${raices == null or raices.empty}">
+              <td colspan="2" style="text-align:center;color:var(--text-muted);">Sin categorías aún.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Dentro de una categoría -->
+      <div class="card" th:if="${padreActual != null}">
+        <div class="breadcrumb">
+          <a th:href="@{/admin/caracteristicas}">Raíces</a>
+          <span class="sep">›</span>
+          <span th:text="${padreActual.nombre}">Categoría</span>
+        </div>
+        <h3 style="margin-bottom:1rem;color:var(--accent);"
+            th:text="'Subcategorías de: ' + ${padreActual.nombre}">Sub</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+            <tr>
+              <th>Nombre de la Subcategoría</th>
+              <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="h : ${hijos}">
+              <td th:text="${h.nombre}" class="fw-bold">Nombre</td>
+              <td>
+                <div class="flex gap-1">
+                  <a th:href="@{/admin/caracteristicas(padreId=${h.idCaracteristica})}"
+                     class="btn btn-outline btn-sm">Entrar</a>
+                  <form th:action="@{/admin/caracteristicas/eliminar/{id}(id=${h.idCaracteristica})}"
+                        method="post" style="margin:0;">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <tr th:if="${hijos == null or hijos.empty}">
+              <td colspan="2" style="text-align:center;color:var(--text-muted);">Sin subcategorías.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-2">
+          <a th:href="@{/admin/caracteristicas}" class="btn btn-outline btn-sm">← Volver a Raíces</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agregar característica -->
+    <div class="card">
+      <h3 style="color:var(--accent);margin-bottom:1rem;">Agregar Característica</h3>
+      <form th:action="@{/admin/caracteristicas/crear}" method="post">
+        <div class="form-group">
+          <label class="form-label" for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" class="form-control"
+                 placeholder="Nombre de la característica" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="idPadre">Categoría Padre (opcional)</label>
+          <select id="idPadre" name="idPadre" class="form-control">
+            <option value="">(sin padre — es raíz)</option>
+            <th:block th:each="car : ${todasCaracteristicas}">
+              <option th:value="${car.idCaracteristica}"
+                      th:text="${car.nombre}"
+                      th:selected="${padreActual != null and padreActual.idCaracteristica == car.idCaracteristica}">
+                Categoría
+              </option>
+            </th:block>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Crear Característica</button>
+      </form>
+    </div>
+
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>

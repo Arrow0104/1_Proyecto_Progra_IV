@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reportes — Bolsa de Empleo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<th:block th:replace="~{layout :: navbar}"/>
+<main class="main-content">
+  <h1 class="page-title">Reporte de Puestos por Mes</h1>
+
+  <!-- Selector de año -->
+  <div class="card" style="max-width:380px;margin-bottom:1.5rem;">
+    <form th:action="@{/admin/reportes/puestos}" method="get" class="flex gap-1 items-center">
+      <div class="form-group" style="margin:0;flex:1;">
+        <label class="form-label" for="anio">Año del Reporte</label>
+        <input type="number" id="anio" name="anio" class="form-control"
+               th:value="${anio}" min="2020" max="2030"/>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top:1.6rem;">Filtrar</button>
+    </form>
+  </div>
+
+  <!-- Tabla de datos -->
+  <div class="table-wrapper" style="max-width:500px;margin-bottom:1.5rem;">
+    <table>
+      <thead>
+      <tr>
+        <th>Mes</th>
+        <th>Puestos Publicados</th>
+      </tr>
+      </thead>
+      <tbody>
+      <th:block th:with="meses=${ {'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'} }">
+        <th:block th:each="m, stat : ${meses}">
+          <tr>
+            <td th:text="${m}">Mes</td>
+            <td>
+              <!-- Buscar si hay datos para este mes -->
+              <th:block th:with="mesNum=${stat.index + 1}, cnt=0">
+                <th:block th:each="fila : ${datos}"
+                          th:with="filaMes=${fila[0]}">
+                                        <span th:if="${filaMes == mesNum}"
+                                              class="badge badge-info"
+                                              th:text="${fila[1]}">0</span>
+                </th:block>
+                <span class="text-muted" style="font-size:0.85rem;">0</span>
+              </th:block>
+            </td>
+          </tr>
+        </th:block>
+      </th:block>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Descargar PDF -->
+  <a th:href="@{/admin/reportes/puestos/pdf(anio=${anio})}" class="btn btn-primary btn-lg">
+    Descargar Reporte PDF
+  </a>
+
+  <div class="mt-2">
+    <a th:href="@{/admin/dashboard}" class="btn btn-outline">← Volver al Dashboard</a>
+  </div>
+</main>
+<th:block th:replace="~{layout :: footer}"/>
+</body>
+</html>
