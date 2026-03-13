@@ -1,7 +1,6 @@
 package cr.ac.una.job.repositories;
 
 import cr.ac.una.job.models.Product;
-
 import java.util.List;
 import java.util.Optional;
 

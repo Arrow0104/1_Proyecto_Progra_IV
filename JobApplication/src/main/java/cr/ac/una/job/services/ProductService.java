@@ -1,11 +1,11 @@
 package cr.ac.una.job.services;
 
+import cr.ac.una.job.models.Product;
 import cr.ac.una.job.config.AppProperties;
 import cr.ac.una.job.dtos.product.CreateProductRequest;
 import cr.ac.una.job.dtos.product.ProductResponse;
 import cr.ac.una.job.dtos.product.UpdateProductRequest;
 import cr.ac.una.job.exceptions.ProductNotFoundException;
-import cr.ac.una.job.models.Product;
 import cr.ac.una.job.repositories.IProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
