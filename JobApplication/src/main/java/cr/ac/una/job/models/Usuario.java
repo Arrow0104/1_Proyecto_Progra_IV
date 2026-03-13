@@ -6,8 +6,7 @@ public class Usuario {
     private int idUsuario;
     private String correo;
     private String identificacion;
-    private String passwordHash;
-    private String passwordSalt;
+    private String password;
     private Rol rol;
     private EstadoUsuario estado;
 
@@ -17,8 +16,7 @@ public class Usuario {
         this.idUsuario = idUsuario;
         this.correo = correo;
         this.identificacion = identificacion;
-        this.passwordHash = passwordHash;
-        this.passwordSalt = passwordSalt;
+        this.password = password;
         this.rol = rol;
         this.estado = estado;
     }
@@ -47,20 +45,8 @@ public class Usuario {
         this.identificacion = identificacion;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public String getPasswordSalt() {
-        return passwordSalt;
-    }
-
-    public void setPasswordSalt(String passwordSalt) {
-        this.passwordSalt = passwordSalt;
+    public String getPassword() {
+        return password;
     }
 
     public Rol getRol() {

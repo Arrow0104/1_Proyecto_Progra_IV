@@ -1,11 +1,39 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head(title)">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Products Application</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title}">Bolsa de Empleo</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
+
+<!-- ── Navbar ── -->
+<nav th:fragment="navbar" class="navbar">
+    <a th:href="@{/templates/public}" class="navbar-brand">💼 Bolsa de Empleo</a>
+    <ul class="navbar-nav">
+        <li><a th:href="@{/puestos/buscar}" class="nav-link">Buscar Puestos</a></li>
+        <li sec:authorize="isAnonymous()">
+            <a th:href="@{/login}" class="nav-link btn-outline">Iniciar Sesión</a>
+        </li>
+        <li sec:authorize="isAuthenticated()">
+            <a th:href="@{/dashboard}" class="nav-link">Dashboard</a>
+        </li>
+        <li sec:authorize="isAuthenticated()">
+            <a th:href="@{/logout}" class="nav-link btn-outline">Cerrar Sesión</a>
+        </li>
+    </ul>
+</nav>
+
+<!-- ── Footer ── -->
+<footer th:fragment="footer">
+    <span>© 2025 Bolsa de Empleo</span>
+    <div>
+        <a th:href="@{/templates/public}">Inicio</a> ·
+        <a th:href="@{/puestos/buscar}">Puestos</a>
+    </div>
+</footer>
+
 </body>
 </html>
