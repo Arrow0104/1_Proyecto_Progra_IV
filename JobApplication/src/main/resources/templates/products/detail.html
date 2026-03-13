@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${pageTitle})}"></head>
+<body>
+<main class="container">
+    <header class="page-header">
+        <h1>Detalle de producto</h1>
+        <div class="actions">
+            <a class="btn btn-secondary" th:href="@{/products}">Volver</a>
+            <a class="btn btn-warning" th:href="@{/products/{id}/edit(id=${product.id})}">Editar</a>
+        </div>
+    </header>
+
+    <section class="card detail-grid">
+        <div>
+            <strong>ID:</strong>
+            <span th:text="${product.id}">1</span>
+        </div>
+
+        <div>
+            <strong>Nombre:</strong>
+            <span th:text="${product.name}">Laptop</span>
+        </div>
+
+        <div>
+            <strong>Precio base:</strong>
+            <span th:text="${product.price}">1000</span>
+        </div>
+
+        <div>
+            <strong>Precio final:</strong>
+            <span th:text="${product.finalPrice}">1130</span>
+        </div>
+
+        <div>
+            <strong>Moneda:</strong>
+            <span th:text="${product.currency}">CRC</span>
+        </div>
+
+        <div>
+            <strong>Activo:</strong>
+            <span th:text="${product.active ? 'Sí' : 'No'}">Sí</span>
+        </div>
+
+        <div>
+            <strong>Creado en:</strong>
+            <span th:text="${product.createdAt}">2026-03-10</span>
+        </div>
+    </section>
+</main>
+</body>
+</html>
