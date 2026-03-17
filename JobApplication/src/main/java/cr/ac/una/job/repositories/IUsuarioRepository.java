@@ -8,11 +8,7 @@ import java.util.Optional;
 
 public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    List<Usuario> findAll();
-
-    List<Usuario> findAllActive();
-
-    Optional<Usuario> findById(Long id);
+    List<Usuario> findByActiveTrue();
 
     Optional<Usuario> findByCorreo(String correo);
 
@@ -20,11 +16,5 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findByCorreoContaining(String correo);
 
-    List<Usuario> findByActiveTrue();
-
     List<Usuario> findByActiveTrueAndCorreoContaining(String correo);
-
-    Usuario save(Usuario usuario);
-
-    Usuario update(Usuario usuario);
 }

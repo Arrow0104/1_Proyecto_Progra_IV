@@ -10,7 +10,7 @@
 <main class="main-content">
   <div class="flex items-center justify-between" style="margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
     <h1 class="page-title" style="margin-bottom:0;border:none;padding:0;">Mis Puestos</h1>
-    <a th:href="@{/empresa/puestos/nuevo}" class="btn btn-primary">Publicar Puesto</a>
+    <a th:href="@{/templates/empresas/puestos/nuevo}" class="btn btn-primary">Publicar Puesto</a>
   </div>
 
   <div class="table-wrapper">
@@ -42,10 +42,10 @@
         <td th:text="${#temporals.format(p.fechaPublicacion, 'dd/MM/yyyy')}">Fecha</td>
         <td>
           <div class="flex gap-1" style="flex-wrap:wrap;">
-            <a th:href="@{/empresa/candidatos/buscar(puestoId=${p.idPuesto})}"
+            <a th:href="@{/templates/empresas/candidatos/buscar(puestoId=${p.idPuesto})}"
                class="btn btn-success btn-sm">Buscar Candidatos</a>
             <form th:if="${p.estado == 'ACTIVO'}"
-                  th:action="@{/empresa/puestos/{id}/desactivar(id=${p.idPuesto})}"
+                  th:action="@{/templates/empresas/puestos/{id}/desactivar(id=${p.idPuesto})}"
                   method="post" style="margin:0;">
               <button type="submit" class="btn btn-danger btn-sm">Desactivar</button>
             </form>

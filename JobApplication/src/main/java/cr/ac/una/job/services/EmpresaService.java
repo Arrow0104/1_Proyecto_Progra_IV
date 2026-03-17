@@ -28,7 +28,7 @@ public class EmpresaService {
     @Transactional(readOnly = true)
     public List<EmpresaResponse> getAllEmpresas() {
         log.info("Fetching all empresas from the database");
-        return repository.findAllActive().stream().map(this::toResponse).toList();
+        return repository.findByActiveTrue().stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
@@ -75,7 +75,7 @@ public class EmpresaService {
         empresa.setNombre(request.getNombre().trim());
         empresa.setTelefono(request.getTelefono().trim());
 
-        Empresa updated = repository.update(empresa);
+        Empresa updated = repository.save(empresa);
         return toResponse(updated);
     }
 
@@ -85,7 +85,7 @@ public class EmpresaService {
         Empresa empresa = repository.findById(id).orElseThrow(() -> new EmpresaNotFoundException(id));
         empresa.setActive(value);
 
-        repository.update(empresa);
+        repository.save(empresa);
     }
 
     public void deleteLogical(Long id) {
@@ -94,7 +94,7 @@ public class EmpresaService {
         Empresa empresa = repository.findById(id).orElseThrow(() -> new EmpresaNotFoundException(id));
         empresa.setActive(false);
 
-        repository.update(empresa);
+        repository.save(empresa);
     }
 
     public UpdateEmpresaRequest buildUpdateRequest(Long id) {

@@ -14,7 +14,7 @@
 
     <!-- Formulario principal -->
     <div class="card">
-      <form th:action="@{/empresa/puestos/nuevo}" method="post" id="formPuesto">
+      <form th:action="@{/templates/empresas/puestos/nuevo}" method="post" id="formPuesto">
         <div class="form-group">
           <label class="form-label" for="titulo">Título del Puesto</label>
           <input type="text" id="titulo" name="titulo" class="form-control"
@@ -41,7 +41,7 @@
         </div>
         <div class="flex gap-1 mt-2">
           <button type="submit" class="btn btn-primary">Publicar Puesto</button>
-          <a th:href="@{/empresa/puestos}" class="btn btn-outline">Cancelar</a>
+          <a th:href="@{/templates/empresas/puestos}" class="btn btn-outline">Cancelar</a>
         </div>
       </form>
     </div>

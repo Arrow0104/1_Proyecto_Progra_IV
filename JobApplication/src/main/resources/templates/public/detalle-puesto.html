@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Detalle de Puesto — Bolsa de Empleo</title>
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
   <div th:if="${puesto}" class="card" style="max-width:700px;margin:0 auto;">
     <p class="card-subtitle" style="font-size:1rem;" th:text="${puesto.empresa.nombre}">Empresa</p>
@@ -34,7 +34,7 @@
           <td th:text="${pc.caracteristica.nombre}">Habilidad</td>
           <td><span class="badge badge-info" th:text="${pc.nivelRequerido}">0</span></td>
         </tr>
-        <tr th:if="${puesto.caracteristicas == null or puesto.caracteristicas.empty}">
+        <tr th:if="${puesto.caracteristicas == null or #lists.isEmpty(puesto.caracteristicas)}">
           <td colspan="2" style="text-align:center;color:var(--text-muted);">Sin requisitos específicos</td>
         </tr>
         </tbody>
@@ -51,6 +51,6 @@
     Puesto no encontrado o no disponible.
   </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>

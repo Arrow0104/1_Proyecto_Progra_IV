@@ -20,8 +20,8 @@
         <p>Conectamos empresas con talento. Encuentra el puesto perfecto o al candidato ideal.</p>
         <div class="flex gap-1 mt-3" style="flex-wrap:wrap;">
             <a th:href="@{/puestos/buscar}" class="btn btn-primary btn-lg">Buscar Puestos</a>
-            <a th:href="@{/registro/empresa}" class="btn btn-outline btn-lg">Registrar Empresa</a>
-            <a th:href="@{/registro/oferente}" class="btn btn-outline btn-lg">Registrar Oferente</a>
+            <a th:href="@{/register-empresa}" class="btn btn-outline btn-lg">Registrar Empresa</a>
+            <a th:href="@{/register-oferente}" class="btn btn-outline btn-lg">Registrar Oferente</a>
         </div>
     </section>
 
@@ -31,31 +31,27 @@
         Pase el cursor sobre una tarjeta para ver los requisitos.
     </p>
 
-    <div class="card-grid">
+    <div th:if="${puestos != null and !puestos.isEmpty()}" class="card-grid">
         <div th:each="puesto : ${puestos}" class="puesto-card-wrapper">
             <div class="card">
-                <p class="card-subtitle" th:text="${puesto.empresa.nombre}">Empresa</p>
+                <!--<p class="card-subtitle" th:text="${puesto.empresa.nombre}">Empresa</p> -->
                 <h3 class="card-title" th:text="${puesto.titulo}">Título</h3>
                 <p class="card-salary"
                    th:text="'₡ ' + ${#numbers.formatDecimal(puesto.salario, 1, 'COMMA', 2, 'POINT')}">₡0</p>
                 <a th:href="@{/puestos/{id}(id=${puesto.idPuesto})}" class="btn btn-outline btn-sm">
                     Ver Detalle
                 </a>
-
+                <p>
+                    Empresa\ (ID):
+                    <span th:text="${puesto.idEmpresa}">0</span>
+                </p>
                 <!-- Tooltip con características -->
-                <div class="puesto-tooltip">
-                    <strong th:text="${puesto.titulo}">Puesto</strong>
-                    <ul th:if="${puesto.caracteristicas != null and !#lists.isEmpty(puesto.caracteristicas)}">
-                        <li th:each="pc : ${puesto.caracteristicas}"
-                            th:text="|${pc.caracteristica.nombre} (nivel ${pc.nivelRequerido})|">
-                            Req
-                        </li>
-                    </ul>
-                    <p th:if="${puesto.caracteristicas == null or #lists.isEmpty(puesto.caracteristicas)}"
-                       class="text-muted" style="font-size:0.82rem;margin-top:0.4rem;">
-                        Sin requisitos específicos
-                    </p>
-                </div>
+                <p th:text="${puesto.descripcion}">Descripción</p>
+
+                <p>
+                    Salario:
+                    <span th:text="${puesto.salario}">0</span>
+                </p>
             </div>
         </div>
 

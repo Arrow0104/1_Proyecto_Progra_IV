@@ -28,7 +28,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public List<UsuarioResponse> getAllUsuarios() {
         log.info("Fetching all usuarios from the database");
-        return repository.findAllActive().stream().map(this::toResponse).toList();
+        return repository.findByActiveTrue().stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
@@ -87,7 +87,7 @@ public class UsuarioService {
         usuario.setRol(request.getRol());
         usuario.setEstado(request.getEstado());
 
-        Usuario updated = repository.update(usuario);
+        Usuario updated = repository.save(usuario);
         return toResponse(updated);
     }
 
@@ -97,7 +97,7 @@ public class UsuarioService {
         Usuario usuario = repository.findById(id).orElseThrow(() -> new UsuarioNotFoundException(id));
         usuario.setActive(value);
 
-        repository.update(usuario);
+        repository.save(usuario);
     }
 
     public void deleteLogical(Long id) {
@@ -106,7 +106,7 @@ public class UsuarioService {
         Usuario usuario = repository.findById(id).orElseThrow(() -> new UsuarioNotFoundException(id));
         usuario.setActive(false);
 
-        repository.update(usuario);
+        repository.save(usuario);
     }
 
     public UpdateUsuarioRequest buildUpdateRequest(Long id) {

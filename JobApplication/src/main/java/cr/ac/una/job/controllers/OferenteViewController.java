@@ -22,72 +22,36 @@ public class OferenteViewController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("oferentes", service.getAllOferentes());
-        model.addAttribute("pageTitle", "Oferentes");
-        return "oferentes/list";
+        return "oferentes/dashboard";  // ← Dashboard del oferente
     }
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
         model.addAttribute("oferente", service.getOferenteById(id));
-        model.addAttribute("pageTitle", "Detalle Oferente");
-        return "oferentes/detail";
+        return "oferentes/habilidades";  // ← Gestionar habilidades
     }
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("oferenteForm", new CreateOferenteRequest());
-        model.addAttribute("pageTitle", "Crear Oferente");
-        model.addAttribute("formTitle", "Crear Oferente");
-        model.addAttribute("formAction", "/oferentes");
-        model.addAttribute("isEdit", false);
-        return "oferentes/form";
+        return "oferentes/cv";  // ← Subir CV
     }
 
     @PostMapping
-    public String create(@Valid @ModelAttribute("oferenteForm") CreateOferenteRequest request,
-                         BindingResult bindingResult,
-                         Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("pageTitle", "Crear Oferente");
-            model.addAttribute("formTitle", "Crear Oferente");
-            model.addAttribute("formAction", "/oferentes");
-            model.addAttribute("isEdit", false);
-            return "oferentes/form";
-        }
-
+    public String create(@Valid @ModelAttribute CreateOferenteRequest request) {
         service.createOferente(request);
         return "redirect:/oferentes";
     }
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
-        UpdateOferenteRequest request = service.buildUpdateRequest(id);
-
-        model.addAttribute("oferenteForm", request);
-        model.addAttribute("oferenteId", id);
-        model.addAttribute("pageTitle", "Editar Oferente");
-        model.addAttribute("formTitle", "Editar Oferente");
-        model.addAttribute("formAction", "/oferentes/" + id);
-        model.addAttribute("isEdit", true);
-
-        return "oferentes/form";
+        model.addAttribute("oferenteForm", service.buildUpdateRequest(id));
+        return "oferentes/cv";  // ← Editar CV
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Long id,
-                         @Valid @ModelAttribute("oferenteForm") UpdateOferenteRequest request,
-                         BindingResult bindingResult,
-                         Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("oferenteId", id);
-            model.addAttribute("pageTitle", "Editar Oferente");
-            model.addAttribute("formTitle", "Editar Oferente");
-            model.addAttribute("formAction", "/oferentes/" + id);
-            model.addAttribute("isEdit", true);
-            return "oferentes/form";
-        }
-
+    public String update(@PathVariable Long id, UpdateOferenteRequest request) {
         service.updateOferente(id, request);
-        return "redirect:/oferentes/" + id;
+        return "redirect:/oferentes";
     }
 }

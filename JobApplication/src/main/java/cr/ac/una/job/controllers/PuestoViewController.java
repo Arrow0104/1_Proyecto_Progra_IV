@@ -20,80 +20,39 @@ public class PuestoViewController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping("/buscar")
     public String list(Model model) {
         model.addAttribute("puestos", service.getAllPuestos());
-        model.addAttribute("pageTitle", "Puestos");
-        return "puestos/list";
+        return "public/buscar-puestos";
     }
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
         model.addAttribute("puesto", service.getPuestoById(id));
-        model.addAttribute("pageTitle", "Detalle Puesto");
-        return "puestos/detail";
+        return "public/detalle-puesto";
     }
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        // Estado por defecto para el form si quieres
-        CreatePuestoRequest form = new CreatePuestoRequest();
-        form.setEstado(EstadoPuesto.ACTIVO);
-
-        model.addAttribute("puestoForm", form);
-        model.addAttribute("pageTitle", "Crear Puesto");
-        model.addAttribute("formTitle", "Crear Puesto");
-        model.addAttribute("formAction", "/puestos");
-        model.addAttribute("isEdit", false);
-
-        return "puestos/form";
+        model.addAttribute("puestoForm", new CreatePuestoRequest());
+        return "empresas/publicar-puesto";
     }
 
     @PostMapping
-    public String create(@Valid @ModelAttribute("puestoForm") CreatePuestoRequest request,
-                         BindingResult bindingResult,
-                         Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("pageTitle", "Crear Puesto");
-            model.addAttribute("formTitle", "Crear Puesto");
-            model.addAttribute("formAction", "/puestos");
-            model.addAttribute("isEdit", false);
-            return "puestos/form";
-        }
-
+    public String create(@Valid @ModelAttribute CreatePuestoRequest request) {
         service.createPuesto(request);
-        return "redirect:/puestos";
+        return "redirect:/puestos/buscar";
     }
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
-        UpdatePuestoRequest request = service.buildUpdateRequest(id);
-
-        model.addAttribute("puestoForm", request);
-        model.addAttribute("puestoId", id);
-        model.addAttribute("pageTitle", "Editar Puesto");
-        model.addAttribute("formTitle", "Editar Puesto");
-        model.addAttribute("formAction", "/puestos/" + id);
-        model.addAttribute("isEdit", true);
-
-        return "puestos/form";
+        model.addAttribute("puestoForm", service.buildUpdateRequest(id));
+        return "empresas/publicar-puesto";
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Long id,
-                         @Valid @ModelAttribute("puestoForm") UpdatePuestoRequest request,
-                         BindingResult bindingResult,
-                         Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("puestoId", id);
-            model.addAttribute("pageTitle", "Editar Puesto");
-            model.addAttribute("formTitle", "Editar Puesto");
-            model.addAttribute("formAction", "/puestos/" + id);
-            model.addAttribute("isEdit", true);
-            return "puestos/form";
-        }
-
+    public String update(@PathVariable Long id, UpdatePuestoRequest request) {
         service.updatePuesto(id, request);
-        return "redirect:/puestos/" + id;
+        return "redirect:/puestos/{id}";
     }
 }

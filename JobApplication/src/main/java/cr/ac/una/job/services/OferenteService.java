@@ -28,7 +28,7 @@ public class OferenteService {
     @Transactional(readOnly = true)
     public List<OferenteResponse> getAllOferentes() {
         log.info("Fetching all oferentes from the database");
-        return repository.findAllActive().stream().map(this::toResponse).toList();
+        return repository.findByActiveTrue().stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
@@ -79,7 +79,7 @@ public class OferenteService {
         oferente.setResidencia(request.getResidencia().trim());
         oferente.setCvPath(request.getCvPath() == null ? null : request.getCvPath().trim());
 
-        Oferente updated = repository.update(oferente);
+        Oferente updated = repository.save(oferente);
         return toResponse(updated);
     }
 
@@ -89,7 +89,7 @@ public class OferenteService {
         Oferente oferente = repository.findById(id).orElseThrow(() -> new OferenteNotFoundException(id));
         oferente.setActive(value);
 
-        repository.update(oferente);
+        repository.save(oferente);
     }
 
     public void deleteLogical(Long id) {
@@ -98,7 +98,7 @@ public class OferenteService {
         Oferente oferente = repository.findById(id).orElseThrow(() -> new OferenteNotFoundException(id));
         oferente.setActive(false);
 
-        repository.update(oferente);
+        repository.save(oferente);
     }
 
     public UpdateOferenteRequest buildUpdateRequest(Long id) {

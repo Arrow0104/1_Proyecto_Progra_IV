@@ -8,19 +8,9 @@ import java.util.Optional;
 
 public interface IEmpresaRepository extends JpaRepository<Empresa, Long> {
 
-    List<Empresa> findAll();
-
-    List<Empresa> findAllActive();
-
-    Optional<Empresa> findById(Long id);
-
-    List<Empresa> findByNombreContaining(String nombre);
-
     List<Empresa> findByActiveTrue();
 
+    Optional<Empresa> findByNombreContaining(String nombre);
+
     List<Empresa> findByActiveTrueAndNombreContaining(String nombre);
-
-    Empresa save(Empresa empresa);
-
-    Empresa update(Empresa empresa);
 }

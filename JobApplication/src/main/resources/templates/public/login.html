@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,7 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 
 <div class="login-wrapper">
   <div class="login-card">
@@ -42,6 +42,6 @@
   </div>
 </div>
 
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>

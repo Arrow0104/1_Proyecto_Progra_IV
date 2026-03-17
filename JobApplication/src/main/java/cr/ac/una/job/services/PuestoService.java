@@ -31,7 +31,7 @@ public class PuestoService {
     @Transactional(readOnly = true)
     public List<PuestoResponse> getAllPuestos() {
         log.info("Fetching all puestos from the database");
-        return repository.findAllActive().stream().map(this::toResponse).toList();
+        return repository.findByActiveTrue().stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
@@ -95,7 +95,7 @@ public class PuestoService {
         puesto.setEstado(request.getEstado());
         puesto.setEmpresa(empresa);
 
-        Puesto updated = repository.update(puesto);
+        Puesto updated = repository.save(puesto);
         return toResponse(updated);
     }
 
@@ -105,7 +105,7 @@ public class PuestoService {
         Puesto puesto = repository.findById(id).orElseThrow(() -> new PuestoNotFoundException(id));
         puesto.setActive(value);
 
-        repository.update(puesto);
+        repository.save(puesto);
     }
 
     public void deleteLogical(Long id) {
@@ -114,7 +114,7 @@ public class PuestoService {
         Puesto puesto = repository.findById(id).orElseThrow(() -> new PuestoNotFoundException(id));
         puesto.setActive(false);
 
-        repository.update(puesto);
+        repository.save(puesto);
     }
 
     public UpdatePuestoRequest buildUpdateRequest(Long id) {
