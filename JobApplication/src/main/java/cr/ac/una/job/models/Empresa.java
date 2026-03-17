@@ -1,29 +1,58 @@
 package cr.ac.una.job.models;
 
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
+@Table(name = "empresas")
 public class Empresa {
-    private int idEmpresa;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idEmpresa;
+
+    @Column(nullable = false, length = 100)
     private String nombre;
+
+    @Column(nullable = false, length = 20)
     private String telefono;
 
+    @Column(nullable = false)
+    private boolean active;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
     // Relación 0..1 con Usuario (según diagrama)
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     public Empresa() {}
 
-    public Empresa(int idEmpresa, String nombre, String telefono, Usuario usuario) {
+    public Empresa(Long idEmpresa, String nombre, String telefono, boolean active, LocalDateTime createdAt, Usuario usuario) {
         this.idEmpresa = idEmpresa;
         this.nombre = nombre;
         this.telefono = telefono;
+        this.active = active;
+        this.createdAt = createdAt;
         this.usuario = usuario;
     }
 
-    public int getIdEmpresa() {
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        active = true;
+    }
+
+    public Long getIdEmpresa() {
         return idEmpresa;
     }
 
-    public void setIdEmpresa(int idEmpresa) {
+    public void setIdEmpresa(Long idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
 
@@ -43,6 +72,22 @@ public class Empresa {
         this.telefono = telefono;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
@@ -55,7 +100,7 @@ public class Empresa {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Empresa empresa)) return false;
-        return idEmpresa == empresa.idEmpresa;
+        return Objects.equals(idEmpresa, empresa.idEmpresa);
     }
 
     @Override
@@ -69,6 +114,8 @@ public class Empresa {
                 "idEmpresa=" + idEmpresa +
                 ", nombre='" + nombre + '\'' +
                 ", telefono='" + telefono + '\'' +
+                ", active=" + active +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

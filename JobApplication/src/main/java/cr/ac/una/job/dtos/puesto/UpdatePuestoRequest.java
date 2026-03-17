@@ -25,11 +25,11 @@ public class UpdatePuestoRequest {
     private EstadoPuesto estado;
 
     @NotNull(message = "El idEmpresa es requerido")
-    private Integer idEmpresa;
+    private Long idEmpresa;
 
     public UpdatePuestoRequest() {}
 
-    public UpdatePuestoRequest(String titulo, String descripcion, BigDecimal salario, EstadoPuesto estado, Integer idEmpresa) {
+    public UpdatePuestoRequest(String titulo, String descripcion, BigDecimal salario, EstadoPuesto estado, Long idEmpresa) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.salario = salario;
@@ -69,11 +69,11 @@ public class UpdatePuestoRequest {
         this.estado = estado;
     }
 
-    public Integer getIdEmpresa() {
+    public Long getIdEmpresa() {
         return idEmpresa;
     }
 
-    public void setIdEmpresa(Integer idEmpresa) {
+    public void setIdEmpresa(Long idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
 }

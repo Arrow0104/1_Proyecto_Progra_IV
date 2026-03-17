@@ -28,7 +28,7 @@ public class PuestoViewController {
     }
 
     @GetMapping("/{id}")
-    public String detail(@PathVariable Integer id, Model model) {
+    public String detail(@PathVariable Long id, Model model) {
         model.addAttribute("puesto", service.getPuestoById(id));
         model.addAttribute("pageTitle", "Detalle Puesto");
         return "puestos/detail";
@@ -66,7 +66,7 @@ public class PuestoViewController {
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable Integer id, Model model) {
+    public String showEditForm(@PathVariable Long id, Model model) {
         UpdatePuestoRequest request = service.buildUpdateRequest(id);
 
         model.addAttribute("puestoForm", request);
@@ -80,7 +80,7 @@ public class PuestoViewController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Integer id,
+    public String update(@PathVariable Long id,
                          @Valid @ModelAttribute("puestoForm") UpdatePuestoRequest request,
                          BindingResult bindingResult,
                          Model model) {

@@ -27,7 +27,7 @@ public class OferenteViewController {
     }
 
     @GetMapping("/{id}")
-    public String detail(@PathVariable Integer id, Model model) {
+    public String detail(@PathVariable Long id, Model model) {
         model.addAttribute("oferente", service.getOferenteById(id));
         model.addAttribute("pageTitle", "Detalle Oferente");
         return "oferentes/detail";
@@ -60,7 +60,7 @@ public class OferenteViewController {
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable Integer id, Model model) {
+    public String showEditForm(@PathVariable Long id, Model model) {
         UpdateOferenteRequest request = service.buildUpdateRequest(id);
 
         model.addAttribute("oferenteForm", request);
@@ -74,7 +74,7 @@ public class OferenteViewController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Integer id,
+    public String update(@PathVariable Long id,
                          @Valid @ModelAttribute("oferenteForm") UpdateOferenteRequest request,
                          BindingResult bindingResult,
                          Model model) {

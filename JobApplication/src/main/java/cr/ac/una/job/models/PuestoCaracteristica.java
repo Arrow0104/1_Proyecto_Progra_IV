@@ -2,7 +2,7 @@ package cr.ac.una.job.models;
 import java.util.Objects;
 
 public class PuestoCaracteristica {
-    private int idPuesto;
+    private Long idPuesto;
     private int idCaracteristica;
     private int nivelRequerido;
 
@@ -12,7 +12,7 @@ public class PuestoCaracteristica {
 
     public PuestoCaracteristica() {}
 
-    public PuestoCaracteristica(int idPuesto, int idCaracteristica, int nivelRequerido, Puesto puesto, Caracteristica caracteristica) {
+    public PuestoCaracteristica(Long idPuesto, int idCaracteristica, int nivelRequerido, Puesto puesto, Caracteristica caracteristica) {
         this.idPuesto = idPuesto;
         this.idCaracteristica = idCaracteristica;
         this.nivelRequerido = nivelRequerido;
@@ -20,11 +20,11 @@ public class PuestoCaracteristica {
         this.caracteristica = caracteristica;
     }
 
-    public int getIdPuesto() {
+    public Long getIdPuesto() {
         return idPuesto;
     }
 
-    public void setIdPuesto(int idPuesto) {
+    public void setIdPuesto(Long idPuesto) {
         this.idPuesto = idPuesto;
     }
 
@@ -51,6 +51,7 @@ public class PuestoCaracteristica {
     public void setPuesto(Puesto puesto) {
         this.puesto = puesto;
         if (puesto != null) this.idPuesto = puesto.getIdPuesto();
+        else this.idPuesto = null;
     }
 
     public Caracteristica getCaracteristica() {
@@ -66,7 +67,7 @@ public class PuestoCaracteristica {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PuestoCaracteristica that)) return false;
-        return idPuesto == that.idPuesto && idCaracteristica == that.idCaracteristica;
+        return idCaracteristica == that.idCaracteristica && Objects.equals(idPuesto, that.idPuesto);
     }
 
     @Override

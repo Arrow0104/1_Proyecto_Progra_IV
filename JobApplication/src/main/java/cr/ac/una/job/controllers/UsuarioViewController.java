@@ -29,7 +29,7 @@ public class UsuarioViewController {
     }
 
     @GetMapping("/{id}")
-    public String detail(@PathVariable Integer id, Model model) {
+    public String detail(@PathVariable Long id, Model model) {
         model.addAttribute("usuario", service.getUsuarioById(id));
         model.addAttribute("pageTitle", "Detalle Usuario");
         return "usuarios/detail";
@@ -74,7 +74,7 @@ public class UsuarioViewController {
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable Integer id, Model model) {
+    public String showEditForm(@PathVariable Long id, Model model) {
         UpdateUsuarioRequest request = service.buildUpdateRequest(id);
 
         model.addAttribute("usuarioForm", request);
@@ -92,7 +92,7 @@ public class UsuarioViewController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Integer id,
+    public String update(@PathVariable Long id,
                          @Valid @ModelAttribute("usuarioForm") UpdateUsuarioRequest request,
                          BindingResult bindingResult,
                          Model model) {

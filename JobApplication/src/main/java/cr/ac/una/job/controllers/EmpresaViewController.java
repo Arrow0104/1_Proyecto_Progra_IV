@@ -27,7 +27,7 @@ public class EmpresaViewController {
     }
 
     @GetMapping("/{id}")
-    public String detail(@PathVariable Integer id, Model model) {
+    public String detail(@PathVariable Long id, Model model) {
         model.addAttribute("empresa", service.getEmpresaById(id));
         model.addAttribute("pageTitle", "Detalle Empresa");
         return "empresas/detail";
@@ -60,7 +60,7 @@ public class EmpresaViewController {
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable Integer id, Model model) {
+    public String showEditForm(@PathVariable Long id, Model model) {
         UpdateEmpresaRequest request = service.buildUpdateRequest(id);
 
         model.addAttribute("empresaForm", request);
@@ -74,7 +74,7 @@ public class EmpresaViewController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Integer id,
+    public String update(@PathVariable Long id,
                          @Valid @ModelAttribute("empresaForm") UpdateEmpresaRequest request,
                          BindingResult bindingResult,
                          Model model) {

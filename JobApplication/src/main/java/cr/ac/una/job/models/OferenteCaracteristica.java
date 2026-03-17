@@ -2,7 +2,7 @@ package cr.ac.una.job.models;
 import java.util.Objects;
 
 public class OferenteCaracteristica {
-    private int idOferente;
+    private Long idOferente;
     private int idCaracteristica;
     private int nivel;
 
@@ -11,7 +11,7 @@ public class OferenteCaracteristica {
 
     public OferenteCaracteristica() {}
 
-    public OferenteCaracteristica(int idOferente, int idCaracteristica, int nivel, Oferente oferente, Caracteristica caracteristica) {
+    public OferenteCaracteristica(Long idOferente, int idCaracteristica, int nivel, Oferente oferente, Caracteristica caracteristica) {
         this.idOferente = idOferente;
         this.idCaracteristica = idCaracteristica;
         this.nivel = nivel;
@@ -19,11 +19,11 @@ public class OferenteCaracteristica {
         this.caracteristica = caracteristica;
     }
 
-    public int getIdOferente() {
+    public Long getIdOferente() {
         return idOferente;
     }
 
-    public void setIdOferente(int idOferente) {
+    public void setIdOferente(Long idOferente) {
         this.idOferente = idOferente;
     }
 
@@ -50,6 +50,7 @@ public class OferenteCaracteristica {
     public void setOferente(Oferente oferente) {
         this.oferente = oferente;
         if (oferente != null) this.idOferente = oferente.getIdOferente();
+        else this.idOferente = null;
     }
 
     public Caracteristica getCaracteristica() {
@@ -65,7 +66,7 @@ public class OferenteCaracteristica {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof OferenteCaracteristica that)) return false;
-        return idOferente == that.idOferente && idCaracteristica == that.idCaracteristica;
+        return idCaracteristica == that.idCaracteristica && Objects.equals(idOferente, that.idOferente);
     }
 
     @Override

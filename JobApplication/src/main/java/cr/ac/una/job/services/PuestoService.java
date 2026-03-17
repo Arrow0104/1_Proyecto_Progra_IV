@@ -10,10 +10,13 @@ import cr.ac.una.job.repositories.IPuestoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 public class PuestoService {
     private static final Logger log = LoggerFactory.getLogger(PuestoService.class);
 
@@ -25,33 +28,54 @@ public class PuestoService {
         this.empresaService = empresaService;
     }
 
+    @Transactional(readOnly = true)
     public List<PuestoResponse> getAllPuestos() {
-        log.info("Fetching all puestos");
-        return repository.findAll().stream().map(this::toResponse).toList();
+        log.info("Fetching all puestos from the database");
+        return repository.findAllActive().stream().map(this::toResponse).toList();
     }
 
-    public PuestoResponse getPuestoById(Integer id) {
-        log.info("Fetching puesto with id {}", id);
+    @Transactional(readOnly = true)
+    public PuestoResponse getPuestoById(Long id) {
+        log.info("Fetching puesto with id {} from the database", id);
         Puesto puesto = repository.findById(id).orElseThrow(() -> new PuestoNotFoundException(id));
         return toResponse(puesto);
     }
 
-    public Puesto getDomainPuestoById(Integer id) {
-        log.info("Fetching domain puesto with id {}", id);
+    @Transactional(readOnly = true)
+    public Puesto getDomainPuestoById(Long id) {
+        log.info("Fetching domain puesto with id {} from the database", id);
         return repository.findById(id).orElseThrow(() -> new PuestoNotFoundException(id));
     }
 
+    @Transactional(readOnly = true)
+    public List<PuestoResponse> searchPuestosByTitulo(String titulo) {
+        if (titulo == null || titulo.trim().length() < 2) {
+            log.warn("Search term '{}' is too short. Returning empty list.", titulo);
+            return List.of();
+        }
+        log.info("Searching puestos with titulo containing '{}' in the database", titulo);
+        return repository.findByActiveTrueAndTituloContaining(titulo).stream().map(this::toResponse).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PuestoResponse> getPuestosByEmpresa(Long empresaId) {
+        log.info("Fetching puestos for empresa with id {} from the database", empresaId);
+        return repository.findByActiveTrueAndEmpresaIdEmpresa(empresaId).stream().map(this::toResponse).toList();
+    }
+
     public PuestoResponse createPuesto(CreatePuestoRequest request) {
-        log.info("Creating puesto (empresaId={})", request.getIdEmpresa());
+        log.info("Creating new puesto from the database (empresaId={})", request.getIdEmpresa());
 
         Empresa empresa = empresaService.getDomainEmpresaById(request.getIdEmpresa());
 
         Puesto puesto = new Puesto(
-                0,
+                null,
                 request.getTitulo().trim(),
                 request.getDescripcion().trim(),
                 request.getSalario(),
                 request.getEstado(),
+                true,
+                LocalDateTime.now(),
                 empresa
         );
 
@@ -59,8 +83,8 @@ public class PuestoService {
         return toResponse(saved);
     }
 
-    public PuestoResponse updatePuesto(Integer id, UpdatePuestoRequest request) {
-        log.info("Updating puesto with id {} (empresaId={})", id, request.getIdEmpresa());
+    public PuestoResponse updatePuesto(Long id, UpdatePuestoRequest request) {
+        log.info("Updating puesto with id {} in the database (empresaId={})", id, request.getIdEmpresa());
 
         Puesto puesto = repository.findById(id).orElseThrow(() -> new PuestoNotFoundException(id));
         Empresa empresa = empresaService.getDomainEmpresaById(request.getIdEmpresa());
@@ -75,11 +99,29 @@ public class PuestoService {
         return toResponse(updated);
     }
 
-    public UpdatePuestoRequest buildUpdateRequest(Integer id) {
-        log.info("Building update request for puesto id {}", id);
+    public void changeActiveStatus(Long id, boolean value) {
+        log.info("Changing active status of puesto with id {} to {} in the database", id, value);
+
+        Puesto puesto = repository.findById(id).orElseThrow(() -> new PuestoNotFoundException(id));
+        puesto.setActive(value);
+
+        repository.update(puesto);
+    }
+
+    public void deleteLogical(Long id) {
+        log.info("Logically deleting puesto with id {} in the database", id);
+
+        Puesto puesto = repository.findById(id).orElseThrow(() -> new PuestoNotFoundException(id));
+        puesto.setActive(false);
+
+        repository.update(puesto);
+    }
+
+    public UpdatePuestoRequest buildUpdateRequest(Long id) {
+        log.info("Building update request for puesto id {} from the database", id);
         Puesto puesto = repository.findById(id).orElseThrow(() -> new PuestoNotFoundException(id));
 
-        Integer idEmpresa = (puesto.getEmpresa() == null) ? null : puesto.getEmpresa().getIdEmpresa();
+        Long idEmpresa = (puesto.getEmpresa() == null) ? null : puesto.getEmpresa().getIdEmpresa();
 
         return new UpdatePuestoRequest(
                 puesto.getTitulo(),
@@ -91,7 +133,7 @@ public class PuestoService {
     }
 
     private PuestoResponse toResponse(Puesto puesto) {
-        Integer idEmpresa = (puesto.getEmpresa() == null) ? null : puesto.getEmpresa().getIdEmpresa();
+        Long idEmpresa = (puesto.getEmpresa() == null) ? null : puesto.getEmpresa().getIdEmpresa();
 
         return new PuestoResponse(
                 puesto.getIdPuesto(),
@@ -99,7 +141,9 @@ public class PuestoService {
                 puesto.getDescripcion(),
                 puesto.getSalario(),
                 puesto.getEstado(),
-                idEmpresa
+                idEmpresa,
+                puesto.isActive(),
+                puesto.getCreatedAt()
         );
     }
 }
