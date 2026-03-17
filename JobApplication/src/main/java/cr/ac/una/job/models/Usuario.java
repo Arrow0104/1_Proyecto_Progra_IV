@@ -12,7 +12,7 @@ public class Usuario {
 
     public Usuario() {}
 
-    public Usuario(int idUsuario, String correo, String identificacion, String passwordHash, String passwordSalt, Rol rol, EstadoUsuario estado) {
+    public Usuario(int idUsuario, String correo, String identificacion, String password, Rol rol, EstadoUsuario estado) {
         this.idUsuario = idUsuario;
         this.correo = correo;
         this.identificacion = identificacion;
@@ -44,6 +44,8 @@ public class Usuario {
     public void setIdentificacion(String identificacion) {
         this.identificacion = identificacion;
     }
+
+    public void setPassword(String password) { this.password = password;}
 
     public String getPassword() {
         return password;
