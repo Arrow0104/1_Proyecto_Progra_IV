@@ -8,22 +8,48 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import cr.ac.una.job.models.Empresa;
+import cr.ac.una.job.models.Usuario;
+import cr.ac.una.job.repositories.IEmpresaRepository;
+import cr.ac.una.job.services.PuestoService;
+import jakarta.servlet.http.HttpSession;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/empresas")
 public class EmpresaViewController {
 
     private final EmpresaService service;
+    private final PuestoService puestoService;
+    private final IEmpresaRepository empresaRepository;
 
-    public EmpresaViewController(EmpresaService service) {
+    public EmpresaViewController(EmpresaService service, PuestoService puestoService, IEmpresaRepository empresaRepository) {
         this.service = service;
+        this.puestoService = puestoService;
+        this.empresaRepository = empresaRepository;
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("empresas", service.getAllEmpresas());
+    public String list(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        if (usuario == null) {
+            return "redirect:/login?error=Debe%20iniciar%20sesión";
+        }
+
+        Optional<Empresa> empresaOpt = empresaRepository.findFirstByUsuarioIdUsuario(usuario.getIdUsuario());
+        if (empresaOpt.isEmpty()) {
+            return "redirect:/inicio?error=No%20tiene%20empresa%20asociada";
+        }
+
+        Empresa empresa = empresaOpt.get();
+
+        model.addAttribute("puestos", puestoService.getPuestosByEmpresa(empresa.getIdEmpresa()));
         model.addAttribute("pageTitle", "Mis Puestos");
-        return "empresas/puestos";  // ← "puestos.html" (tabla con mis puestos)
+        model.addAttribute("empresaNombre", empresa.getNombre());
+
+        return "empresas/puestos";
     }
 
     @GetMapping("/{id}")

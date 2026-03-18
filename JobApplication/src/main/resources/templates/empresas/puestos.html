@@ -6,13 +6,16 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
   <div class="flex items-center justify-between" style="margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
     <h1 class="page-title" style="margin-bottom:0;border:none;padding:0;">Mis Puestos</h1>
     <a th:href="@{/templates/empresas/puestos/nuevo}" class="btn btn-primary">Publicar Puesto</a>
   </div>
-
+  <p class="text-sec">Sesión: <span th:text="${usuarioCorreo}">correo</span></p>
+  <p class="text-sec" th:if="${empresaNombre}">
+    Empresa: <strong th:text="${empresaNombre}">Empresa</strong>
+  </p>
   <div class="table-wrapper">
     <table>
       <thead>
@@ -32,14 +35,13 @@
         <td th:text="${p.titulo}" class="fw-bold">Título</td>
         <td th:text="'₡ ' + ${#numbers.formatDecimal(p.salario, 1, 'COMMA', 2, 'POINT')}">₡0</td>
         <td>
-          <span th:if="${p.tipoPublicacion == 'PUBLICO'}" class="badge badge-info">Público</span>
-          <span th:if="${p.tipoPublicacion == 'PRIVADO'}" class="badge badge-warning">Privado</span>
+          <span class="badge badge-info">N/A</span>
         </td>
         <td>
           <span th:if="${p.estado == 'ACTIVO'}"   class="badge badge-success">Activo</span>
           <span th:if="${p.estado == 'INACTIVO'}" class="badge badge-danger">Inactivo</span>
         </td>
-        <td th:text="${#temporals.format(p.fechaPublicacion, 'dd/MM/yyyy')}">Fecha</td>
+        <td th:text="${#temporals.format(p.createdAt, 'dd/MM/yyyy')}">Fecha</td>
         <td>
           <div class="flex gap-1" style="flex-wrap:wrap;">
             <a th:href="@{/templates/empresas/candidatos/buscar(puestoId=${p.idPuesto})}"
@@ -61,6 +63,6 @@
     </table>
   </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>

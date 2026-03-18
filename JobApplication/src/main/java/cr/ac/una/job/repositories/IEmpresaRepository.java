@@ -12,5 +12,7 @@ public interface IEmpresaRepository extends JpaRepository<Empresa, Long> {
 
     Optional<Empresa> findByNombreContaining(String nombre);
 
+    Optional<Empresa> findFirstByUsuarioIdUsuario(Long idUsuario);
+
     List<Empresa> findByActiveTrueAndNombreContaining(String nombre);
 }

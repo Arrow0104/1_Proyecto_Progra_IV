@@ -6,11 +6,11 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
   <h1 class="page-title">Oferente — Dashboard</h1>
   <p class="text-sec" style="margin-bottom:1.5rem;">
-    Bienvenido, <strong th:text="${oferente.nombreCompleto}" class="text-accent">Nombre</strong>.
+    Bienvenido, <strong th:text="${oferente.nombre}" class="text-accent">Nombre</strong>.
     Administre sus habilidades y su currículo desde aquí.
   </p>
   <div class="flex gap-1" style="flex-wrap:wrap;">
@@ -18,6 +18,6 @@
     <a th:href="@{/oferente/cv}"          class="btn btn-outline btn-lg">Mi Currículo (CV)</a>
   </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>

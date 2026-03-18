@@ -21,7 +21,11 @@
             <a th:href="@{/dashboard}" class="nav-link">Dashboard</a>
         </li>
         <li sec:authorize="isAuthenticated()">
-            <a th:href="@{/logout}" class="nav-link btn-outline">Cerrar Sesión</a>
+            <form th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="nav-link btn-outline" style="background:none;border:none;cursor:pointer;">
+                    Cerrar Sesión
+                </button>
+            </form>
         </li>
     </ul>
 </nav>

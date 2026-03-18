@@ -6,7 +6,7 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
   <h1 class="page-title">Administrador</h1>
   <p class="text-sec" style="margin-bottom:1.5rem;">Aprobaciones, catálogo de características y reportes.</p>
@@ -37,6 +37,6 @@
     <a th:href="@{/admin/reportes/puestos}"      class="btn btn-outline">Reportes</a>
   </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>
