@@ -14,61 +14,79 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private static boolean isPublicPath(String uri) {
-        if (startsWith(uri, "/css") || startsWith(uri, "/js") || startsWith(uri, "/images") || startsWith(uri, "/webjars")) {
+        // Recursos estáticos
+        if (startsWith(uri, "/css") || startsWith(uri, "/js")
+                || startsWith(uri, "/images") || startsWith(uri, "/webjars")) {
             return true;
         }
 
-        // MUY IMPORTANTE: dejar /error público
+        // Error page — MUY IMPORTANTE dejarla pública
         if (uri.equals("/error")) return true;
 
-        return uri.equals("/") || uri.equals("/inicio") || uri.equals("/login")
-                || uri.equals("/register-empresa") || uri.equals("/register-oferente");
+        // Páginas públicas de navegación
+        if (uri.equals("/") || uri.equals("/inicio")
+                || uri.equals("/login")
+                || uri.equals("/register-empresa")
+                || uri.equals("/register-oferente")) {
+            return true;
+        }
+
+        // Rutas de registro (POST y GET)
+        if (startsWith(uri, "/registro/")) return true;
+
+        // Búsqueda y detalle de puestos — acceso público
+        if (startsWith(uri, "/puestos/")) return true;
+
+        return false;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String uri = request.getRequestURI();
 
-        // Permitir públicos
+        // Rutas públicas
         if (isPublicPath(uri)) return true;
 
-        // Permitir POST /login (tu login simple)
+        // Permitir POST /login
         if (uri.equals("/login") && "POST".equalsIgnoreCase(request.getMethod())) return true;
 
-        // Permitir POST /logout (aunque esté sin sesión)
+        // Permitir POST /logout
         if (uri.equals("/logout") && "POST".equalsIgnoreCase(request.getMethod())) return true;
 
         HttpSession session = request.getSession(false);
         Usuario usuario = (session == null) ? null : (Usuario) session.getAttribute("usuario");
         Rol rol = (session == null) ? null : (Rol) session.getAttribute("rol");
 
-        // Si no hay sesión → a login
+        // Sin sesión → a login
         if (usuario == null || rol == null) {
             response.sendRedirect("/login?error=Debe%20iniciar%20sesión");
             return false;
         }
 
-        // Reglas por rol / prefijo
+        // /admin/** → solo ADMIN
+        if (startsWith(uri, "/admin") && rol != Rol.ADMIN) {
+            response.sendRedirect("/inicio?error=No%20autorizado");
+            return false;
+        }
+
+        // /empresas/** → solo EMPRESA
         if (startsWith(uri, "/empresas") && rol != Rol.EMPRESA) {
             response.sendRedirect("/inicio?error=No%20autorizado");
             return false;
         }
 
+        // /oferentes/** → solo OFERENTE
         if (startsWith(uri, "/oferentes") && rol != Rol.OFERENTE) {
             response.sendRedirect("/inicio?error=No%20autorizado");
             return false;
         }
 
-        // Admin en este repo está colgado de /usuarios (renderiza admin/dashboard)
+        // /usuarios/** → solo ADMIN
         if (startsWith(uri, "/usuarios") && rol != Rol.ADMIN) {
             response.sendRedirect("/inicio?error=No%20autorizado");
             return false;
         }
 
-        // Si más adelante agregas /admin/**, puedes incluirlo aquí también.
-
         return true;
     }
-
-
 }

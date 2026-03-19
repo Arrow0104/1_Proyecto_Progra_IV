@@ -6,15 +6,19 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
   <h1 class="page-title">Oferentes Pendientes de Aprobación</h1>
+
+  <div th:if="${param.msg}" class="alert alert-success" th:text="${param.msg}"></div>
 
   <div class="table-wrapper">
     <table>
       <thead>
       <tr>
-        <th>Usuario (Correo)</th>
+        <th>ID</th>
+        <th>Correo</th>
+        <th>Identificación</th>
         <th>Fecha de Registro</th>
         <th>Estado</th>
         <th>Acción</th>
@@ -22,8 +26,10 @@
       </thead>
       <tbody>
       <tr th:each="u : ${usuarios}">
+        <td th:text="${u.idUsuario}">#</td>
         <td th:text="${u.correo}" class="fw-bold">correo</td>
-        <td th:text="${#temporals.format(u.fechaCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+        <td th:text="${u.identificacion}">id</td>
+        <td th:text="${#temporals.format(u.createdAt, 'dd/MM/yyyy HH:mm')}">Fecha</td>
         <td><span class="badge badge-warning">Pendiente</span></td>
         <td>
           <form th:action="@{/admin/oferentes/aprobar/{id}(id=${u.idUsuario})}"
@@ -33,7 +39,7 @@
         </td>
       </tr>
       <tr th:if="${usuarios == null or usuarios.empty}">
-        <td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem;">
+        <td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem;">
           No hay oferentes pendientes de aprobación.
         </td>
       </tr>
@@ -41,9 +47,9 @@
     </table>
   </div>
   <div class="mt-2">
-    <a th:href="@{/admin/dashboard}" class="btn btn-outline">← Volver al Dashboard</a>
+    <a th:href="@{/usuarios}" class="btn btn-outline">← Volver al Dashboard</a>
   </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>
