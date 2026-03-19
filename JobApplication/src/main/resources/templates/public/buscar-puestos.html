@@ -8,7 +8,7 @@
 <body>
 <th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
-  <h1 class="page-title">Buscar Puestos por Características</h1>
+  <h1 class="page-title">Buscar Puestos</h1>
 
   <div style="display:grid;grid-template-columns:280px 1fr;gap:2rem;align-items:start;">
 
@@ -16,24 +16,39 @@
     <div class="card">
       <h3 style="margin-bottom:1rem;color:var(--accent);">Filtrar por Habilidades</h3>
       <form th:action="@{/puestos/buscar}" method="get">
-        <ul class="tree-list">
-          <li th:each="raiz : ${raices}" class="tree-parent">
-            <label style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;">
-              <span th:text="${raiz.nombre}">Categoría</span>
+        <div th:each="entry : ${arbol}">
+
+          <!-- Categoría raíz -->
+          <p style="font-weight:600;color:var(--text-primary);margin:0.75rem 0 0.3rem;
+                    font-size:0.9rem;text-transform:uppercase;letter-spacing:0.04em;"
+             th:text="${entry.key.nombre}">Categoría</p>
+
+          <!-- Hijos como checkboxes -->
+          <div th:if="${!entry.value.isEmpty()}">
+            <div th:each="hijo : ${entry.value}"
+                 style="padding:0.25rem 0 0.25rem 0.5rem;border-left:2px solid var(--border);">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.88rem;">
+                <input type="checkbox" name="caracteristicas"
+                       th:value="${hijo.idCaracteristica}"
+                       th:checked="${seleccionadas.contains(hijo.idCaracteristica)}"/>
+                <span th:text="${hijo.nombre}" style="color:var(--text-sec);">Habilidad</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Si la raíz no tiene hijos, mostrarla directamente -->
+          <div th:if="${entry.value.isEmpty()}"
+               style="padding:0.25rem 0 0.25rem 0.5rem;border-left:2px solid var(--border);">
+            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.88rem;">
+              <input type="checkbox" name="caracteristicas"
+                     th:value="${entry.key.idCaracteristica}"
+                     th:checked="${seleccionadas.contains(entry.key.idCaracteristica)}"/>
+              <span th:text="${entry.key.nombre}" style="color:var(--text-sec);">Categoría</span>
             </label>
-            <ul class="tree-children" th:if="${raiz.hijos != null and !#lists.isEmpty(raiz.hijos)}">
-              <li th:each="hijo : ${raiz.hijos}">
-                <label>
-                  <input type="checkbox" name="caracteristicas"
-                         th:value="${hijo.idCaracteristica}"
-                         th:checked="${seleccionadas != null and seleccionadas.contains(hijo.idCaracteristica)}"/>
-                  <span th:text="${hijo.nombre}">Habilidad</span>
-                </label>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <hr class="divider"/>
+          </div>
+        </div>
+
+        <hr class="divider" style="margin:1rem 0;"/>
         <div class="flex gap-1">
           <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
           <a th:href="@{/puestos/buscar}" class="btn btn-outline btn-sm">Limpiar</a>
@@ -43,26 +58,52 @@
 
     <!-- Resultados -->
     <div>
-      <h2 style="margin-bottom:1rem;" th:if="${resultados != null}">
+      <h2 style="margin-bottom:1rem;" th:if="${filtroActivo}">
         Resultados
-        <span class="text-muted" style="font-size:0.9rem;font-family:var(--font-body);font-weight:400;"
+        <span class="text-muted"
+              style="font-size:0.9rem;font-family:var(--font-body);font-weight:400;"
               th:text="'(' + ${resultados.size()} + ' puesto(s) encontrado(s))'"></span>
       </h2>
-      <p th:if="${resultados == null}" class="text-muted">Seleccione características y haga clic en Buscar.</p>
+      <h2 style="margin-bottom:1rem;" th:if="${!filtroActivo}">
+        Todos los Puestos Activos
+        <span class="text-muted"
+              style="font-size:0.9rem;font-family:var(--font-body);font-weight:400;"
+              th:text="'(' + ${resultados.size()} + ')'"></span>
+      </h2>
 
-      <div class="card-grid" th:if="${resultados != null and !#lists.isEmpty(resultados)}">
+      <!-- Tarjetas de resultados -->
+      <div th:if="${!resultados.isEmpty()}"
+           style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;">
         <div th:each="puesto : ${resultados}" class="card">
-          <p class="card-subtitle" th:text="${puesto.empresa.nombre}">Empresa</p>
-          <h3 class="card-title" th:text="${puesto.titulo}">Título</h3>
-          <p class="card-salary" th:text="'₡ ' + ${#numbers.formatDecimal(puesto.salario, 1, 'COMMA', 2, 'POINT')}">₡0</p>
-          <a th:href="@{/puestos/{id}(id=${puesto.idPuesto})}" class="btn btn-outline btn-sm">Ver Detalle</a>
+          <p class="card-subtitle" style="font-size:0.82rem;margin-bottom:0.3rem;"
+             th:text="${puesto.empresa.nombre}">Empresa</p>
+          <h3 class="card-title" style="font-size:1.05rem;margin-bottom:0.5rem;"
+              th:text="${puesto.titulo}">Título</h3>
+          <p class="card-salary"
+             th:text="'₡ ' + ${#numbers.formatDecimal(puesto.salario, 1, 'COMMA', 2, 'POINT')}">₡0</p>
+          <p class="text-muted" style="font-size:0.82rem;margin-bottom:0.75rem;
+                                       display:-webkit-box;-webkit-line-clamp:2;
+                                       -webkit-box-orient:vertical;overflow:hidden;"
+             th:text="${puesto.descripcion}">Descripción...</p>
+          <a th:href="@{/puestos/{id}(id=${puesto.idPuesto})}"
+             class="btn btn-outline btn-sm">Ver Detalle</a>
         </div>
       </div>
 
-      <div class="alert alert-warning" th:if="${resultados != null and #lists.isEmpty(resultados)}">
+      <!-- Sin resultados con filtro -->
+      <div th:if="${resultados.isEmpty() and filtroActivo}"
+           class="alert alert-warning">
         No se encontraron puestos con las características seleccionadas.
+        <a th:href="@{/puestos/buscar}" style="margin-left:0.5rem;">Ver todos</a>
+      </div>
+
+      <!-- Sin puestos en absoluto -->
+      <div th:if="${resultados.isEmpty() and !filtroActivo}"
+           class="alert alert-warning">
+        No hay puestos disponibles en este momento.
       </div>
     </div>
+
   </div>
 </main>
 <th:block th:replace="~{fragments/layout :: footer}"/>

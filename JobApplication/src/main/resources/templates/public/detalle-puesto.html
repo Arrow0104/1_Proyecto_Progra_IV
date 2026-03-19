@@ -8,16 +8,17 @@
 <body>
 <th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
-  <div th:if="${puesto}" class="card" style="max-width:700px;margin:0 auto;">
-    <p class="card-subtitle" style="font-size:1rem;" th:text="${puesto.empresa.nombre}">Empresa</p>
+
+  <div th:if="${puesto}" class="card" style="max-width:720px;margin:0 auto;">
+    <p class="card-subtitle" style="font-size:1rem;margin-bottom:0.25rem;"
+       th:text="${puesto.empresa.nombre}">Empresa</p>
     <h1 style="font-size:1.8rem;margin-bottom:0.5rem;" th:text="${puesto.titulo}">Título</h1>
-    <p class="card-salary" th:text="'₡ ' + ${#numbers.formatDecimal(puesto.salario, 1, 'COMMA', 2, 'POINT')}">₡0</p>
+    <p class="card-salary"
+       th:text="'₡ ' + ${#numbers.formatDecimal(puesto.salario, 1, 'COMMA', 2, 'POINT')}">₡0</p>
 
     <div style="display:flex;gap:0.5rem;margin-bottom:1.2rem;flex-wrap:wrap;">
-      <span th:if="${puesto.tipoPublicacion == 'PUBLICO'}" class="badge badge-info">Público</span>
-      <span th:if="${puesto.tipoPublicacion == 'PRIVADO'}" class="badge badge-warning">Privado</span>
-      <span th:if="${puesto.estado == 'ACTIVO'}" class="badge badge-success">Activo</span>
-      <span th:if="${puesto.estado == 'INACTIVO'}" class="badge badge-danger">Inactivo</span>
+      <span th:if="${puesto.estado.name() == 'ACTIVO'}"  class="badge badge-success">Activo</span>
+      <span th:if="${puesto.estado.name() == 'CERRADO'}" class="badge badge-danger">Cerrado</span>
     </div>
 
     <hr class="divider"/>
@@ -26,30 +27,51 @@
 
     <hr class="divider"/>
     <h3 style="margin-bottom:0.75rem;">Características Requeridas</h3>
-    <div class="table-wrapper">
+
+    <div th:if="${caracteristicas != null and !caracteristicas.isEmpty()}"
+         class="table-wrapper">
       <table>
-        <thead><tr><th>Característica</th><th>Nivel Mínimo Requerido</th></tr></thead>
-        <tbody>
-        <tr th:each="pc : ${puesto.caracteristicas}">
-          <td th:text="${pc.caracteristica.nombre}">Habilidad</td>
-          <td><span class="badge badge-info" th:text="${pc.nivelRequerido}">0</span></td>
+        <thead>
+        <tr>
+          <th>Categoría</th>
+          <th>Característica</th>
+          <th>Nivel Mínimo Requerido</th>
         </tr>
-        <tr th:if="${puesto.caracteristicas == null or #lists.isEmpty(puesto.caracteristicas)}">
-          <td colspan="2" style="text-align:center;color:var(--text-muted);">Sin requisitos específicos</td>
+        </thead>
+        <tbody>
+        <tr th:each="pc : ${caracteristicas}">
+          <td class="text-muted" style="font-size:0.88rem;"
+              th:text="${pc.caracteristica.padre != null ? pc.caracteristica.padre.nombre : '—'}">Cat</td>
+          <td th:text="${pc.caracteristica.nombre}" class="fw-bold">Habilidad</td>
+          <td>
+            <span class="badge badge-info" th:text="${pc.nivelRequerido}">0</span>
+            <span class="text-muted" style="font-size:0.82rem;margin-left:0.3rem;"
+                  th:text="${pc.nivelRequerido == 1 ? '— Básico' :
+                             pc.nivelRequerido == 2 ? '— Elemental' :
+                             pc.nivelRequerido == 3 ? '— Intermedio' :
+                             pc.nivelRequerido == 4 ? '— Avanzado' : '— Experto'}">
+            </span>
+          </td>
         </tr>
         </tbody>
       </table>
     </div>
 
-    <div class="mt-3">
-      <a th:href="@{/}" class="btn btn-outline">← Volver al Inicio</a>
-      <a th:href="@{/puestos/buscar}" class="btn btn-outline" style="margin-left:0.5rem;">Buscar Más Puestos</a>
+    <p th:if="${caracteristicas == null or caracteristicas.isEmpty()}"
+       class="text-muted" style="font-size:0.9rem;">
+      Este puesto no tiene requisitos específicos de habilidades.
+    </p>
+
+    <div class="mt-3 flex gap-1">
+      <a th:href="@{/puestos/buscar}" class="btn btn-outline">← Volver a Búsqueda</a>
+      <a th:href="@{/}" class="btn btn-outline">Inicio</a>
     </div>
   </div>
 
   <div th:if="${puesto == null}" class="alert alert-danger">
     Puesto no encontrado o no disponible.
   </div>
+
 </main>
 <th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
