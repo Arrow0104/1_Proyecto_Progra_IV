@@ -10,12 +10,16 @@
 <main class="main-content">
   <div class="flex items-center justify-between" style="margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
     <h1 class="page-title" style="margin-bottom:0;border:none;padding:0;">Mis Puestos</h1>
-    <a th:href="@{/templates/empresas/puestos/nuevo}" class="btn btn-primary">Publicar Puesto</a>
+    <a th:href="@{/empresa/puestos/nuevo}" class="btn btn-primary">Publicar Puesto</a>
   </div>
-  <p class="text-sec">Sesión: <span th:text="${usuarioCorreo}">correo</span></p>
+
+  <div th:if="${param.msg}"   class="alert alert-success" th:text="${param.msg}"></div>
+  <div th:if="${param.error}" class="alert alert-danger"  th:text="${param.error}"></div>
+
   <p class="text-sec" th:if="${empresaNombre}">
     Empresa: <strong th:text="${empresaNombre}">Empresa</strong>
   </p>
+
   <div class="table-wrapper">
     <table>
       <thead>
@@ -23,7 +27,6 @@
         <th>ID</th>
         <th>Título del Puesto</th>
         <th>Salario</th>
-        <th>Tipo</th>
         <th>Estado</th>
         <th>Fecha de Publicación</th>
         <th>Acciones</th>
@@ -35,27 +38,31 @@
         <td th:text="${p.titulo}" class="fw-bold">Título</td>
         <td th:text="'₡ ' + ${#numbers.formatDecimal(p.salario, 1, 'COMMA', 2, 'POINT')}">₡0</td>
         <td>
-          <span class="badge badge-info">N/A</span>
-        </td>
-        <td>
-          <span th:if="${p.estado == 'ACTIVO'}"   class="badge badge-success">Activo</span>
-          <span th:if="${p.estado == 'INACTIVO'}" class="badge badge-danger">Inactivo</span>
+          <span th:if="${p.estado.name() == 'ACTIVO'}"  class="badge badge-success">Activo</span>
+          <span th:if="${p.estado.name() == 'CERRADO'}" class="badge badge-danger">Cerrado</span>
         </td>
         <td th:text="${#temporals.format(p.createdAt, 'dd/MM/yyyy')}">Fecha</td>
         <td>
           <div class="flex gap-1" style="flex-wrap:wrap;">
-            <a th:href="@{/templates/empresas/candidatos/buscar(puestoId=${p.idPuesto})}"
-               class="btn btn-success btn-sm">Buscar Candidatos</a>
-            <form th:if="${p.estado == 'ACTIVO'}"
-                  th:action="@{/templates/empresas/puestos/{id}/desactivar(id=${p.idPuesto})}"
+            <a th:href="@{/empresa/candidatos(puestoId=${p.idPuesto})}"
+               class="btn btn-success btn-sm">Ver Candidatos</a>
+            <a th:href="@{/empresa/puestos/{id}/editar(id=${p.idPuesto})}"
+               class="btn btn-outline btn-sm">Editar</a>
+            <form th:if="${p.estado.name() == 'ACTIVO'}"
+                  th:action="@{/empresa/puestos/{id}/cerrar(id=${p.idPuesto})}"
                   method="post" style="margin:0;">
-              <button type="submit" class="btn btn-danger btn-sm">Desactivar</button>
+              <button type="submit" class="btn btn-danger btn-sm">Cerrar</button>
+            </form>
+            <form th:if="${p.estado.name() == 'CERRADO'}"
+                  th:action="@{/empresa/puestos/{id}/activar(id=${p.idPuesto})}"
+                  method="post" style="margin:0;">
+              <button type="submit" class="btn btn-outline btn-sm">Reactivar</button>
             </form>
           </div>
         </td>
       </tr>
       <tr th:if="${puestos == null or puestos.empty}">
-        <td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem;">
+        <td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem;">
           No ha publicado ningún puesto aún.
         </td>
       </tr>

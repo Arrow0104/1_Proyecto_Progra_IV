@@ -1,85 +1,73 @@
 package cr.ac.una.job.models;
+
+import jakarta.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
+@Table(name = "oferente_caracteristicas")
+@IdClass(OferenteCaracteristica.OferenteCaracteristicaId.class)
 public class OferenteCaracteristica {
-    private Long idOferente;
-    private int idCaracteristica;
-    private int nivel;
 
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "oferente_id", nullable = false)
     private Oferente oferente;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "caracteristica_id", nullable = false)
     private Caracteristica caracteristica;
+
+    @Column(nullable = false)
+    private int nivel;
 
     public OferenteCaracteristica() {}
 
-    public OferenteCaracteristica(Long idOferente, int idCaracteristica, int nivel, Oferente oferente, Caracteristica caracteristica) {
-        this.idOferente = idOferente;
-        this.idCaracteristica = idCaracteristica;
-        this.nivel = nivel;
+    public OferenteCaracteristica(Oferente oferente, Caracteristica caracteristica, int nivel) {
         this.oferente = oferente;
         this.caracteristica = caracteristica;
-    }
-
-    public Long getIdOferente() {
-        return idOferente;
-    }
-
-    public void setIdOferente(Long idOferente) {
-        this.idOferente = idOferente;
-    }
-
-    public int getIdCaracteristica() {
-        return idCaracteristica;
-    }
-
-    public void setIdCaracteristica(int idCaracteristica) {
-        this.idCaracteristica = idCaracteristica;
-    }
-
-    public int getNivel() {
-        return nivel;
-    }
-
-    public void setNivel(int nivel) {
         this.nivel = nivel;
     }
 
-    public Oferente getOferente() {
-        return oferente;
-    }
+    public Oferente getOferente() { return oferente; }
+    public void setOferente(Oferente oferente) { this.oferente = oferente; }
 
-    public void setOferente(Oferente oferente) {
-        this.oferente = oferente;
-        if (oferente != null) this.idOferente = oferente.getIdOferente();
-        else this.idOferente = null;
-    }
+    public Caracteristica getCaracteristica() { return caracteristica; }
+    public void setCaracteristica(Caracteristica caracteristica) { this.caracteristica = caracteristica; }
 
-    public Caracteristica getCaracteristica() {
-        return caracteristica;
-    }
-
-    public void setCaracteristica(Caracteristica caracteristica) {
-        this.caracteristica = caracteristica;
-        if (caracteristica != null) this.idCaracteristica = caracteristica.getIdCaracteristica();
-    }
+    public int getNivel() { return nivel; }
+    public void setNivel(int nivel) { this.nivel = nivel; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof OferenteCaracteristica that)) return false;
-        return idCaracteristica == that.idCaracteristica && Objects.equals(idOferente, that.idOferente);
+        return Objects.equals(oferente, that.oferente) && Objects.equals(caracteristica, that.caracteristica);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(idOferente, idCaracteristica);
-    }
+    public int hashCode() { return Objects.hash(oferente, caracteristica); }
 
-    @Override
-    public String toString() {
-        return "OferenteCaracteristica{" +
-                "idOferente=" + idOferente +
-                ", idCaracteristica=" + idCaracteristica +
-                ", nivel=" + nivel +
-                '}';
+    // ── Clave compuesta ──────────────────────────────────────────────────────
+    public static class OferenteCaracteristicaId implements Serializable {
+        private Long oferente;
+        private Long caracteristica;
+
+        public OferenteCaracteristicaId() {}
+        public OferenteCaracteristicaId(Long oferente, Long caracteristica) {
+            this.oferente = oferente;
+            this.caracteristica = caracteristica;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof OferenteCaracteristicaId that)) return false;
+            return Objects.equals(oferente, that.oferente) && Objects.equals(caracteristica, that.caracteristica);
+        }
+
+        @Override
+        public int hashCode() { return Objects.hash(oferente, caracteristica); }
     }
 }

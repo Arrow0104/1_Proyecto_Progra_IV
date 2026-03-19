@@ -6,80 +6,55 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
-  <h1 class="page-title">Publicar Nuevo Puesto</h1>
+  <h1 class="page-title" th:text="${puestoId != null ? 'Editar Puesto' : 'Publicar Nuevo Puesto'}">Publicar Nuevo Puesto</h1>
 
-  <div style="display:grid;grid-template-columns:1fr 340px;gap:2rem;align-items:start;">
+  <div th:if="${param.error}" class="alert alert-danger" th:text="${param.error}"></div>
 
-    <!-- Formulario principal -->
-    <div class="card">
-      <form th:action="@{/templates/empresas/puestos/nuevo}" method="post" id="formPuesto">
+  <div class="card" style="max-width:680px;">
+    <!-- Crear: POST /empresa/puestos/nuevo | Editar: POST /empresa/puestos/{id}/editar -->
+    <form th:action="${puestoId != null ? '/empresa/puestos/' + puestoId + '/editar' : '/empresa/puestos/nuevo'}"
+          method="post">
+
+      <div class="form-group">
+        <label class="form-label" for="titulo">Título del Puesto</label>
+        <input type="text" id="titulo" name="titulo" class="form-control"
+               th:value="${puestoForm?.titulo}"
+               placeholder="Ej: Desarrollador Full Stack" required/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
+                  placeholder="Responsabilidades, requisitos y beneficios..." required
+                  th:text="${puestoForm?.descripcion}"></textarea>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div class="form-group">
-          <label class="form-label" for="titulo">Título del Puesto</label>
-          <input type="text" id="titulo" name="titulo" class="form-control"
-                 placeholder="Desarrollador Full Stack" required/>
+          <label class="form-label" for="salario">Salario Ofrecido (₡)</label>
+          <input type="number" id="salario" name="salario" class="form-control"
+                 th:value="${puestoForm?.salario}"
+                 placeholder="1500000" step="1" min="0" required/>
         </div>
         <div class="form-group">
-          <label class="form-label" for="descripcion">Descripción General</label>
-          <textarea id="descripcion" name="descripcion" class="form-control"
-                    placeholder="Describa el puesto, responsabilidades y beneficios..." required></textarea>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label" for="salario">Salario Ofrecido (₡)</label>
-            <input type="number" id="salario" name="salario" class="form-control"
-                   placeholder="800000" step="0.01" min="0" required/>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="tipoPublicacion">Tipo de Publicación</label>
-            <select id="tipoPublicacion" name="tipoPublicacion" class="form-control">
-              <option value="PUBLICO">Público  — visible para todos</option>
-              <option value="PRIVADO">Privado — solo oferentes registrados</option>
-            </select>
-          </div>
-        </div>
-        <div class="flex gap-1 mt-2">
-          <button type="submit" class="btn btn-primary">Publicar Puesto</button>
-          <a th:href="@{/templates/empresas/puestos}" class="btn btn-outline">Cancelar</a>
-        </div>
-      </form>
-    </div>
-
-    <!-- Panel de características requeridas -->
-    <div class="card">
-      <h3 style="color:var(--accent);margin-bottom:1rem;">Características Requeridas</h3>
-      <p class="text-muted" style="font-size:0.85rem;margin-bottom:1rem;">
-        Seleccione las habilidades necesarias y el nivel requerido (1–5).
-      </p>
-
-      <!-- Lista jerárquica de características con checkboxes y nivel -->
-      <div th:each="raiz : ${#lists.toList(caracteristicas)}" th:if="${raiz.padre == null}">
-        <p style="font-weight:600;color:var(--text-primary);margin:0.75rem 0 0.3rem;"
-           th:text="${raiz.nombre}">Categoría</p>
-        <div th:each="car : ${caracteristicas}"
-             th:if="${car.padre != null and car.padre.idCaracteristica == raiz.idCaracteristica}">
-          <div style="padding:0.35rem 0;border-bottom:1px solid var(--border);">
-            <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.9rem;">
-              <input type="checkbox" name="idsCaracteristicas"
-                     th:value="${car.idCaracteristica}"
-                     th:form="formPuesto"
-                     onchange="toggleNivel(this)"/>
-              <span th:text="${car.nombre}" style="color:var(--text-sec);flex:1;">Habilidad</span>
-              <input type="number" name="niveles"
-                     th:form="formPuesto"
-                     min="1" max="5" value="1"
-                     style="width:55px;background:var(--bg-mid);border:1px solid var(--border);
-                                          border-radius:4px;padding:2px 6px;color:var(--text-primary);
-                                          font-size:0.85rem;text-align:center;"
-                     th:id="'nivel-' + ${car.idCaracteristica}"/>
-            </label>
-          </div>
+          <label class="form-label" for="estado">Estado</label>
+          <select id="estado" name="estado" class="form-control">
+            <option value="ACTIVO"  th:selected="${puestoForm?.estado?.name() == 'ACTIVO'}">Activo</option>
+            <option value="CERRADO" th:selected="${puestoForm?.estado?.name() == 'CERRADO'}">Cerrado</option>
+          </select>
         </div>
       </div>
-    </div>
+
+      <div class="flex gap-1 mt-2">
+        <button type="submit" class="btn btn-primary"
+                th:text="${puestoId != null ? 'Guardar Cambios' : 'Publicar Puesto'}">Publicar</button>
+        <a th:href="@{/empresas}" class="btn btn-outline">Cancelar</a>
+      </div>
+    </form>
   </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>

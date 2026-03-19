@@ -6,9 +6,12 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
   <h1 class="page-title">Mis Habilidades</h1>
+
+  <div th:if="${param.msg}"   class="alert alert-success" th:text="${param.msg}"></div>
+  <div th:if="${param.error}" class="alert alert-danger"  th:text="${param.error}"></div>
 
   <div style="display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start;">
 
@@ -19,20 +22,17 @@
         <table>
           <thead>
           <tr>
+            <th>Categoría</th>
             <th>Característica</th>
-            <th>Ruta</th>
             <th>Nivel (1–5)</th>
             <th>Eliminar</th>
           </tr>
           </thead>
           <tbody>
           <tr th:each="h : ${habilidades}">
+            <td class="text-muted" style="font-size:0.88rem;"
+                th:text="${h.caracteristica.padre != null ? h.caracteristica.padre.nombre : '—'}">Cat</td>
             <td th:text="${h.caracteristica.nombre}" class="fw-bold">Habilidad</td>
-            <td class="text-muted" style="font-size:0.83rem;">
-                                <span th:if="${h.caracteristica.padre != null}"
-                                      th:text="${h.caracteristica.padre.nombre} + ' / '">Cat / </span>
-              <span th:text="${h.caracteristica.nombre}">Habilidad</span>
-            </td>
             <td><span class="badge badge-info" th:text="${h.nivel}">0</span></td>
             <td>
               <form th:action="@{/oferente/habilidades/eliminar}" method="post" style="margin:0;">
@@ -50,6 +50,9 @@
           </tbody>
         </table>
       </div>
+      <div class="mt-2">
+        <a th:href="@{/oferentes}" class="btn btn-outline btn-sm">← Volver al Dashboard</a>
+      </div>
     </div>
 
     <!-- Agregar habilidad -->
@@ -60,18 +63,22 @@
           <label class="form-label" for="idCaracteristica">Característica</label>
           <select id="idCaracteristica" name="idCaracteristica" class="form-control" required>
             <option value="">— Seleccione —</option>
-            <th:block th:each="raiz : ${raices}">
-              <optgroup th:label="${raiz.nombre}">
-                <option th:each="hijo : ${raiz.hijos}"
-                        th:if="${raiz.hijos != null}"
+            <th:block th:each="entry : ${arbol}">
+              <!-- Si la raíz tiene hijos, mostrar como optgroup -->
+              <optgroup th:if="${!entry.value.isEmpty()}" th:label="${entry.key.nombre}">
+                <option th:each="hijo : ${entry.value}"
                         th:value="${hijo.idCaracteristica}"
                         th:text="${hijo.nombre}">Habilidad</option>
               </optgroup>
+              <!-- Si no tiene hijos, mostrar la raíz directamente -->
+              <option th:if="${entry.value.isEmpty()}"
+                      th:value="${entry.key.idCaracteristica}"
+                      th:text="${entry.key.nombre}">Categoría</option>
             </th:block>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label" for="nivel">Nivel de Dominio (1 = básico, 5 = experto)</label>
+          <label class="form-label" for="nivel">Nivel de Dominio</label>
           <select id="nivel" name="nivel" class="form-control" required>
             <option value="1">1 — Básico</option>
             <option value="2">2 — Elemental</option>
@@ -83,8 +90,9 @@
         <button type="submit" class="btn btn-primary w-100">Agregar Habilidad</button>
       </form>
     </div>
+
   </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>

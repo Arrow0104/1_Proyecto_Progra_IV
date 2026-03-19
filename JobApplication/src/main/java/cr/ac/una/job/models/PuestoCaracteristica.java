@@ -58,10 +58,10 @@ public class PuestoCaracteristica {
         return caracteristica;
     }
 
-    public void setCaracteristica(Caracteristica caracteristica) {
-        this.caracteristica = caracteristica;
-        if (caracteristica != null) this.idCaracteristica = caracteristica.getIdCaracteristica();
-    }
+//    public void setCaracteristica(Caracteristica caracteristica) {
+//        this.caracteristica = caracteristica;
+//        if (caracteristica != null) this.idCaracteristica = caracteristica.getIdCaracteristica();
+//    }
 
     @Override
     public boolean equals(Object o) {

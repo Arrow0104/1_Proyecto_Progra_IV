@@ -1,75 +1,52 @@
 package cr.ac.una.job.models;
+
+import jakarta.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "caracteristicas")
 public class Caracteristica {
-    private int idCaracteristica;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idCaracteristica;
+
+    @Column(nullable = false, length = 100)
     private String nombre;
 
-    // en el diagrama: idPadre : Integer (nullable) y relación padre 0..1 (auto-referencia)
-    private Integer idPadre;
+    @ManyToOne
+    @JoinColumn(name = "padre_id")
     private Caracteristica padre;
 
     public Caracteristica() {}
 
-    public Caracteristica(int idCaracteristica, String nombre, Integer idPadre, Caracteristica padre) {
+    public Caracteristica(Long idCaracteristica, String nombre, Caracteristica padre) {
         this.idCaracteristica = idCaracteristica;
         this.nombre = nombre;
-        this.idPadre = idPadre;
         this.padre = padre;
     }
 
-    public int getIdCaracteristica() {
-        return idCaracteristica;
-    }
+    public Long getIdCaracteristica() { return idCaracteristica; }
+    public void setIdCaracteristica(Long idCaracteristica) { this.idCaracteristica = idCaracteristica; }
 
-    public void setIdCaracteristica(int idCaracteristica) {
-        this.idCaracteristica = idCaracteristica;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Integer getIdPadre() {
-        return idPadre;
-    }
-
-    public void setIdPadre(Integer idPadre) {
-        this.idPadre = idPadre;
-    }
-
-    public Caracteristica getPadre() {
-        return padre;
-    }
-
-    public void setPadre(Caracteristica padre) {
-        this.padre = padre;
-        this.idPadre = (padre == null) ? null : padre.getIdCaracteristica();
-    }
+    public Caracteristica getPadre() { return padre; }
+    public void setPadre(Caracteristica padre) { this.padre = padre; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Caracteristica that)) return false;
-        return idCaracteristica == that.idCaracteristica;
+        return Objects.equals(idCaracteristica, that.idCaracteristica);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(idCaracteristica);
-    }
+    public int hashCode() { return Objects.hash(idCaracteristica); }
 
     @Override
     public String toString() {
-        return "Caracteristica{" +
-                "idCaracteristica=" + idCaracteristica +
-                ", nombre='" + nombre + '\'' +
-                ", idPadre=" + idPadre +
-                '}';
+        return "Caracteristica{id=" + idCaracteristica + ", nombre='" + nombre + "'}";
     }
-
 }

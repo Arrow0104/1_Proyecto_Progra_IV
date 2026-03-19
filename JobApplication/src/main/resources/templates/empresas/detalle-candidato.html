@@ -2,71 +2,56 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Detalle de Candidato — Bolsa de Empleo</title>
+  <title>Candidatos — Bolsa de Empleo</title>
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
-  <h1 class="page-title">Detalle de Oferente</h1>
+  <h1 class="page-title">Candidatos para el Puesto</h1>
+  <p class="text-sec" style="margin-bottom:1.5rem;">
+    Puesto: <strong th:text="${puesto.titulo}" class="text-accent">Título</strong>
+  </p>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;" class="mb-3">
-    <!-- Datos personales -->
-    <div class="card">
-      <h3 th:text="${oferente.nombreCompleto}" style="color:var(--accent);margin-bottom:1rem;">Nombre</h3>
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:0.4rem 1rem;font-size:0.92rem;">
-        <span class="text-muted">Identificación:</span>
-        <span class="text-primary" th:text="${oferente.numIdentificacion}">ID</span>
-        <span class="text-muted">Correo:</span>
-        <span class="text-primary" th:text="${oferente.usuario.correo}">email</span>
-        <span class="text-muted">Teléfono:</span>
-        <span class="text-primary" th:text="${oferente.telefono}">tel</span>
-        <span class="text-muted">Residencia:</span>
-        <span class="text-primary" th:text="${oferente.residencia}">ciudad</span>
-        <span class="text-muted">Nacionalidad:</span>
-        <span class="text-primary" th:text="${oferente.nacionalidad}">país</span>
-      </div>
-
-      <div class="mt-2" th:if="${oferente.cvPath != null}">
-        <a th:href="@{'/uploads/cv/cv_' + ${oferente.idOferente} + '.pdf'}"
-           target="_blank" class="btn btn-primary btn-sm">Ver Currículo (PDF)</a>
-      </div>
-      <p th:if="${oferente.cvPath == null}" class="text-muted mt-1" style="font-size:0.85rem;">
-        El oferente no ha subido su currículo aún.
-      </p>
-    </div>
-
-    <!-- Habilidades -->
-    <div class="card">
-      <h3 style="color:var(--accent);margin-bottom:1rem;">Habilidades</h3>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-          <tr>
-            <th>Característica</th>
-            <th>Nivel</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="h : ${habilidades}">
-            <td th:text="${h.caracteristica.nombre}">Habilidad</td>
-            <td>
-              <span class="badge badge-info" th:text="${h.nivel}">0</span>
-            </td>
-          </tr>
-          <tr th:if="${habilidades == null or habilidades.empty}">
-            <td colspan="2" style="color:var(--text-muted);text-align:center;padding:1rem;">
-              Sin habilidades registradas
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+      <tr>
+        <th>Oferente</th>
+        <th>Residencia</th>
+        <th>CV</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="o : ${candidatos}">
+        <td th:text="${o.nombre}" class="fw-bold">Nombre</td>
+        <td th:text="${o.residencia}" class="text-muted">Ciudad</td>
+        <td>
+          <a th:if="${o.cvPath != null and !#strings.isEmpty(o.cvPath)}"
+             th:href="${o.cvPath}" target="_blank" class="btn btn-outline btn-sm">Ver CV</a>
+          <span th:if="${o.cvPath == null or #strings.isEmpty(o.cvPath)}"
+                class="text-muted" style="font-size:0.85rem;">Sin CV</span>
+        </td>
+        <td>
+          <a th:href="@{/empresa/candidatos/{id}(id=${o.idOferente})}"
+             class="btn btn-outline btn-sm">Ver Detalle</a>
+        </td>
+      </tr>
+      <tr th:if="${candidatos == null or candidatos.empty}">
+        <td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem;">
+          No se encontraron candidatos para este puesto.
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 
-  <a th:href="@{/templates/empresas/puestos}" class="btn btn-outline">← Volver</a>
+  <div class="mt-2">
+    <a th:href="@{/empresas}" class="btn btn-outline">← Volver a Mis Puestos</a>
+  </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>
+

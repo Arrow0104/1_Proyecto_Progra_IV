@@ -1,16 +1,7 @@
 package cr.ac.una.job.config;
 
-import cr.ac.una.job.models.Empresa;
-import cr.ac.una.job.models.EstadoPuesto;
-import cr.ac.una.job.models.EstadoUsuario;
-import cr.ac.una.job.models.Oferente;
-import cr.ac.una.job.models.Puesto;
-import cr.ac.una.job.models.Rol;
-import cr.ac.una.job.models.Usuario;
-import cr.ac.una.job.repositories.IEmpresaRepository;
-import cr.ac.una.job.repositories.IOferenteRepository;
-import cr.ac.una.job.repositories.IPuestoRepository;
-import cr.ac.una.job.repositories.IUsuarioRepository;
+import cr.ac.una.job.models.*;
+import cr.ac.una.job.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +17,8 @@ public class DataLoader {
             IUsuarioRepository usuarioRepository,
             IEmpresaRepository empresaRepository,
             IOferenteRepository oferenteRepository,
-            IPuestoRepository puestoRepository) {
+            IPuestoRepository puestoRepository,
+            ICaracteristicaRepository caracteristicaRepository) {
 
         return args -> {
             // 1) Usuarios/Empresas/Oferentes: si no hay usuarios
@@ -102,6 +94,62 @@ public class DataLoader {
                 puestoRepository.save(p4);
                 puestoRepository.save(p5);
                 puestoRepository.save(p6);
+            }
+
+            if (caracteristicaRepository.count() == 0) {
+
+                // ── Raíces ───────────────────────────────────────────────────
+                Caracteristica prog      = new Caracteristica(null, "Programación",   null);
+                Caracteristica bd        = new Caracteristica(null, "Bases de Datos", null);
+                Caracteristica devops    = new Caracteristica(null, "DevOps",         null);
+                Caracteristica diseno    = new Caracteristica(null, "Diseño",         null);
+                Caracteristica blandas   = new Caracteristica(null, "Habilidades Blandas", null);
+
+                caracteristicaRepository.save(prog);
+                caracteristicaRepository.save(bd);
+                caracteristicaRepository.save(devops);
+                caracteristicaRepository.save(diseno);
+                caracteristicaRepository.save(blandas);
+
+                // ── Programación ─────────────────────────────────────────────
+                caracteristicaRepository.save(new Caracteristica(null, "Java",        prog));
+                caracteristicaRepository.save(new Caracteristica(null, "Python",      prog));
+                caracteristicaRepository.save(new Caracteristica(null, "JavaScript",  prog));
+                caracteristicaRepository.save(new Caracteristica(null, "TypeScript",  prog));
+                caracteristicaRepository.save(new Caracteristica(null, "C#",          prog));
+                caracteristicaRepository.save(new Caracteristica(null, "Go",          prog));
+                caracteristicaRepository.save(new Caracteristica(null, "Spring Boot", prog));
+                caracteristicaRepository.save(new Caracteristica(null, "React",       prog));
+                caracteristicaRepository.save(new Caracteristica(null, "Angular",     prog));
+                caracteristicaRepository.save(new Caracteristica(null, "Node.js",     prog));
+
+                // ── Bases de Datos ───────────────────────────────────────────
+                caracteristicaRepository.save(new Caracteristica(null, "PostgreSQL",  bd));
+                caracteristicaRepository.save(new Caracteristica(null, "MySQL",       bd));
+                caracteristicaRepository.save(new Caracteristica(null, "MongoDB",     bd));
+                caracteristicaRepository.save(new Caracteristica(null, "Redis",       bd));
+                caracteristicaRepository.save(new Caracteristica(null, "Oracle",      bd));
+
+                // ── DevOps ───────────────────────────────────────────────────
+                caracteristicaRepository.save(new Caracteristica(null, "Docker",      devops));
+                caracteristicaRepository.save(new Caracteristica(null, "Kubernetes",  devops));
+                caracteristicaRepository.save(new Caracteristica(null, "Jenkins",     devops));
+                caracteristicaRepository.save(new Caracteristica(null, "GitHub Actions", devops));
+                caracteristicaRepository.save(new Caracteristica(null, "AWS",         devops));
+                caracteristicaRepository.save(new Caracteristica(null, "Azure",       devops));
+
+                // ── Diseño ───────────────────────────────────────────────────
+                caracteristicaRepository.save(new Caracteristica(null, "Figma",       diseno));
+                caracteristicaRepository.save(new Caracteristica(null, "Photoshop",   diseno));
+                caracteristicaRepository.save(new Caracteristica(null, "Illustrator", diseno));
+                caracteristicaRepository.save(new Caracteristica(null, "UX Research", diseno));
+
+                // ── Habilidades Blandas ──────────────────────────────────────
+                caracteristicaRepository.save(new Caracteristica(null, "Trabajo en equipo",  blandas));
+                caracteristicaRepository.save(new Caracteristica(null, "Liderazgo",          blandas));
+                caracteristicaRepository.save(new Caracteristica(null, "Comunicación",       blandas));
+                caracteristicaRepository.save(new Caracteristica(null, "Resolución de problemas", blandas));
+                caracteristicaRepository.save(new Caracteristica(null, "Gestión del tiempo", blandas));
             }
         };
     }
