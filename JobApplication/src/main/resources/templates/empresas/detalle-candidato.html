@@ -13,6 +13,8 @@
     Puesto: <strong th:text="${puesto.titulo}" class="text-accent">Título</strong>
   </p>
 
+  <div th:if="${param.msg}" class="alert alert-success" th:text="${param.msg}"></div>
+
   <div class="table-wrapper">
     <table>
       <thead>
@@ -20,25 +22,35 @@
         <th>Oferente</th>
         <th>Residencia</th>
         <th>CV</th>
-        <th>Acciones</th>
+        <th>Habilidades</th>
       </tr>
       </thead>
       <tbody>
-      <tr th:each="o : ${candidatos}">
-        <td th:text="${o.nombre}" class="fw-bold">Nombre</td>
-        <td th:text="${o.residencia}" class="text-muted">Ciudad</td>
+      <tr th:each="entry : ${candidatosConHabilidades}">
+        <!-- entry.key = Oferente, entry.value = List<OferenteCaracteristica> -->
+        <td th:text="${entry.key.nombre}" class="fw-bold">Nombre</td>
+        <td th:text="${entry.key.residencia}" class="text-muted">Ciudad</td>
         <td>
-          <a th:if="${o.cvPath != null and !#strings.isEmpty(o.cvPath)}"
-             th:href="${o.cvPath}" target="_blank" class="btn btn-outline btn-sm">Ver CV</a>
-          <span th:if="${o.cvPath == null or #strings.isEmpty(o.cvPath)}"
+          <a th:if="${entry.key.cvPath != null and !#strings.isEmpty(entry.key.cvPath)}"
+             th:href="${entry.key.cvPath}" target="_blank" class="btn btn-outline btn-sm">Ver CV</a>
+          <span th:if="${entry.key.cvPath == null or #strings.isEmpty(entry.key.cvPath)}"
                 class="text-muted" style="font-size:0.85rem;">Sin CV</span>
         </td>
         <td>
-          <a th:href="@{/empresa/candidatos/{id}(id=${o.idOferente})}"
-             class="btn btn-outline btn-sm">Ver Detalle</a>
+          <!-- Lista de habilidades del oferente -->
+          <div th:if="${!entry.value.isEmpty()}"
+               style="display:flex;flex-wrap:wrap;gap:0.3rem;">
+            <span th:each="h : ${entry.value}"
+                  class="badge badge-info"
+                  th:text="${h.caracteristica.nombre} + ' (' + ${h.nivel} + ')'">
+              Habilidad
+            </span>
+          </div>
+          <span th:if="${entry.value.isEmpty()}"
+                class="text-muted" style="font-size:0.82rem;">Sin habilidades registradas</span>
         </td>
       </tr>
-      <tr th:if="${candidatos == null or candidatos.empty}">
+      <tr th:if="${candidatosConHabilidades == null or candidatosConHabilidades.isEmpty()}">
         <td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem;">
           No se encontraron candidatos para este puesto.
         </td>
@@ -54,4 +66,3 @@
 <th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>
-

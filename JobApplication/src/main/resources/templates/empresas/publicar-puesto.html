@@ -12,47 +12,120 @@
 
   <div th:if="${param.error}" class="alert alert-danger" th:text="${param.error}"></div>
 
-  <div class="card" style="max-width:680px;">
-    <!-- Crear: POST /empresa/puestos/nuevo | Editar: POST /empresa/puestos/{id}/editar -->
-    <form th:action="${puestoId != null ? '/empresa/puestos/' + puestoId + '/editar' : '/empresa/puestos/nuevo'}"
-          method="post">
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:2rem;align-items:start;">
 
-      <div class="form-group">
-        <label class="form-label" for="titulo">Título del Puesto</label>
-        <input type="text" id="titulo" name="titulo" class="form-control"
-               th:value="${puestoForm?.titulo}"
-               placeholder="Ej: Desarrollador Full Stack" required/>
-      </div>
+    <!-- Formulario principal -->
+    <div class="card">
+      <form th:action="${puestoId != null ? '/empresa/puestos/' + puestoId + '/editar' : '/empresa/puestos/nuevo'}"
+            method="post" id="formPuesto">
 
-      <div class="form-group">
-        <label class="form-label" for="descripcion">Descripción</label>
-        <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
-                  placeholder="Responsabilidades, requisitos y beneficios..." required
-                  th:text="${puestoForm?.descripcion}"></textarea>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div class="form-group">
-          <label class="form-label" for="salario">Salario Ofrecido (₡)</label>
-          <input type="number" id="salario" name="salario" class="form-control"
-                 th:value="${puestoForm?.salario}"
-                 placeholder="1500000" step="1" min="0" required/>
+          <label class="form-label" for="titulo">Título del Puesto</label>
+          <input type="text" id="titulo" name="titulo" class="form-control"
+                 th:value="${puestoForm?.titulo}"
+                 placeholder="Ej: Desarrollador Full Stack" required/>
         </div>
+
         <div class="form-group">
-          <label class="form-label" for="estado">Estado</label>
-          <select id="estado" name="estado" class="form-control">
-            <option value="ACTIVO"  th:selected="${puestoForm?.estado?.name() == 'ACTIVO'}">Activo</option>
-            <option value="CERRADO" th:selected="${puestoForm?.estado?.name() == 'CERRADO'}">Cerrado</option>
-          </select>
+          <label class="form-label" for="descripcion">Descripción</label>
+          <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
+                    placeholder="Responsabilidades, requisitos y beneficios..." required
+                    th:text="${puestoForm?.descripcion}"></textarea>
         </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label class="form-label" for="salario">Salario Ofrecido (₡)</label>
+            <input type="number" id="salario" name="salario" class="form-control"
+                   th:value="${puestoForm?.salario}"
+                   placeholder="1500000" step="1" min="0" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="estado">Estado</label>
+            <select id="estado" name="estado" class="form-control">
+              <option value="ACTIVO"  th:selected="${puestoForm?.estado?.name() == 'ACTIVO'}">Activo</option>
+              <option value="CERRADO" th:selected="${puestoForm?.estado?.name() == 'CERRADO'}">Cerrado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex gap-1 mt-2">
+          <button type="submit" class="btn btn-primary"
+                  th:text="${puestoId != null ? 'Guardar Cambios' : 'Publicar Puesto'}">Publicar</button>
+          <a th:href="@{/empresas}" class="btn btn-outline">Cancelar</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Panel de características requeridas -->
+    <div class="card">
+      <h3 style="color:var(--accent);margin-bottom:0.5rem;">Características Requeridas</h3>
+      <p class="text-muted" style="font-size:0.82rem;margin-bottom:1rem;">
+        Seleccione las habilidades necesarias y el nivel mínimo requerido (1–5).
+      </p>
+
+      <div th:if="${arbol == null or arbol.isEmpty()}"
+           class="text-muted" style="font-size:0.85rem;">
+        No hay características disponibles aún.
       </div>
 
-      <div class="flex gap-1 mt-2">
-        <button type="submit" class="btn btn-primary"
-                th:text="${puestoId != null ? 'Guardar Cambios' : 'Publicar Puesto'}">Publicar</button>
-        <a th:href="@{/empresas}" class="btn btn-outline">Cancelar</a>
+      <div th:each="entry : ${arbol}">
+        <!-- Nombre de la categoría raíz -->
+        <p style="font-weight:600;color:var(--text-primary);margin:0.75rem 0 0.3rem;
+                  font-size:0.85rem;text-transform:uppercase;letter-spacing:0.04em;"
+           th:text="${entry.key.nombre}">Categoría</p>
+
+        <!-- Hijos con checkbox + selector de nivel -->
+        <div th:if="${!entry.value.isEmpty()}">
+          <div th:each="hijo : ${entry.value}"
+               style="padding:0.3rem 0;border-bottom:1px solid var(--border);">
+            <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.88rem;">
+              <input type="checkbox"
+                     name="idsCaracteristicas"
+                     th:value="${hijo.idCaracteristica}"
+                     th:form="formPuesto"
+                     th:checked="${caracteristicasSeleccionadas != null and caracteristicasSeleccionadas.contains(hijo.idCaracteristica)}"/>
+              <span th:text="${hijo.nombre}" style="color:var(--text-sec);flex:1;">Habilidad</span>
+              <select th:name="'nivel_' + ${hijo.idCaracteristica}"
+                      th:form="formPuesto"
+                      style="width:110px;background:var(--bg-mid);border:1px solid var(--border);
+                             border-radius:4px;padding:2px 4px;color:var(--text-primary);
+                             font-size:0.8rem;">
+                <option value="1">1 — Básico</option>
+                <option value="2">2 — Elemental</option>
+                <option value="3">3 — Intermedio</option>
+                <option value="4">4 — Avanzado</option>
+                <option value="5">5 — Experto</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <!-- Si la raíz no tiene hijos, mostrarla directamente -->
+        <div th:if="${entry.value.isEmpty()}"
+             style="padding:0.3rem 0;border-bottom:1px solid var(--border);">
+          <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.88rem;">
+            <input type="checkbox"
+                   name="idsCaracteristicas"
+                   th:value="${entry.key.idCaracteristica}"
+                   th:form="formPuesto"/>
+            <span th:text="${entry.key.nombre}" style="color:var(--text-sec);flex:1;">Categoría</span>
+            <select th:name="'nivel_' + ${entry.key.idCaracteristica}"
+                    th:form="formPuesto"
+                    style="width:110px;background:var(--bg-mid);border:1px solid var(--border);
+                           border-radius:4px;padding:2px 4px;color:var(--text-primary);
+                           font-size:0.8rem;">
+              <option value="1">1 — Básico</option>
+              <option value="2">2 — Elemental</option>
+              <option value="3">3 — Intermedio</option>
+              <option value="4">4 — Avanzado</option>
+              <option value="5">5 — Experto</option>
+            </select>
+          </label>
+        </div>
       </div>
-    </form>
+    </div>
+
   </div>
 </main>
 <th:block th:replace="~{fragments/layout :: footer}"/>
