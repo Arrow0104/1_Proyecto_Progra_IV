@@ -18,7 +18,8 @@ public class DataLoader {
             IEmpresaRepository empresaRepository,
             IOferenteRepository oferenteRepository,
             IPuestoRepository puestoRepository,
-            ICaracteristicaRepository caracteristicaRepository) {
+            ICaracteristicaRepository caracteristicaRepository,
+            IPuestoCaracteristicaRepository puestoCaracteristicaRepository) {
 
         return args -> {
             // 1) Usuarios/Empresas/Oferentes: si no hay usuarios
@@ -55,45 +56,6 @@ public class DataLoader {
                 oferenteRepository.save(o1);
                 oferenteRepository.save(o2);
                 oferenteRepository.save(o3);
-            }
-
-            // 2) Puestos: si no hay puestos (independiente de usuarios)
-            if (puestoRepository.count() == 0) {
-                // Nota: asumir que ya existen empresas; si no, habría que buscarlas/crearlas
-                Empresa e1 = empresaRepository.findAll().stream().findFirst().orElse(null);
-                Empresa e2 = empresaRepository.findAll().stream().skip(1).findFirst().orElse(e1);
-                Empresa e3 = empresaRepository.findAll().stream().skip(2).findFirst().orElse(e1);
-
-                Puesto p1 = new Puesto(null, "Desarrollador Java Senior",
-                        "Buscamos desarrollador Java con experiencia en Spring Boot, microservicios y arquitectura de sistemas. Mínimo 5 años de experiencia.",
-                        new BigDecimal("2500000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e1);
-
-                Puesto p2 = new Puesto(null, "Diseñador UI/UX",
-                        "Profesional en diseño de interfaces y experiencia de usuario. Conocimiento en Figma, prototipos y diseño responsivo.",
-                        new BigDecimal("1800000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e1);
-
-                Puesto p3 = new Puesto(null, "Analista de Sistemas",
-                        "Análisis, diseño y mejora de procesos de sistemas. Experiencia en metodologías ágiles.",
-                        new BigDecimal("2000000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e2);
-
-                Puesto p4 = new Puesto(null, "Desarrollador Full Stack",
-                        "Desarrollador con experiencia en Java backend y React frontend. Trabajo con bases de datos relacionales.",
-                        new BigDecimal("2200000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e2);
-
-                Puesto p5 = new Puesto(null, "Especialista en DevOps",
-                        "Experiencia en Docker, Kubernetes, CI/CD pipelines y administración de infraestructura en la nube.",
-                        new BigDecimal("2700000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e3);
-
-                Puesto p6 = new Puesto(null, "Líder de Proyecto",
-                        "Coordinación y liderazgo de equipos de desarrollo. Experiencia en gestión de proyectos ágiles.",
-                        new BigDecimal("3000000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e3);
-
-                puestoRepository.save(p1);
-                puestoRepository.save(p2);
-                puestoRepository.save(p3);
-                puestoRepository.save(p4);
-                puestoRepository.save(p5);
-                puestoRepository.save(p6);
             }
 
             if (caracteristicaRepository.count() == 0) {
@@ -151,6 +113,73 @@ public class DataLoader {
                 caracteristicaRepository.save(new Caracteristica(null, "Resolución de problemas", blandas));
                 caracteristicaRepository.save(new Caracteristica(null, "Gestión del tiempo", blandas));
             }
+
+            // ── 3) Puestos + características ─────────────────────────────────
+            if (puestoRepository.count() == 0) {
+                Empresa e1 = empresaRepository.findAll().stream().findFirst().orElse(null);
+                Empresa e2 = empresaRepository.findAll().stream().skip(1).findFirst().orElse(e1);
+                Empresa e3 = empresaRepository.findAll().stream().skip(2).findFirst().orElse(e1);
+
+                Puesto p1 = puestoRepository.save(new Puesto(null, "Desarrollador Java Senior",
+                        "Buscamos desarrollador Java con experiencia en Spring Boot, microservicios y arquitectura de sistemas. Mínimo 5 años de experiencia.",
+                        new BigDecimal("2500000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e1));
+
+                Puesto p2 = puestoRepository.save(new Puesto(null, "Diseñador UI/UX",
+                        "Profesional en diseño de interfaces y experiencia de usuario. Conocimiento en Figma, prototipos y diseño responsivo.",
+                        new BigDecimal("1800000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e1));
+
+                Puesto p3 = puestoRepository.save(new Puesto(null, "Analista de Sistemas",
+                        "Análisis, diseño y mejora de procesos de sistemas. Experiencia en metodologías ágiles.",
+                        new BigDecimal("2000000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e2));
+
+                Puesto p4 = puestoRepository.save(new Puesto(null, "Desarrollador Full Stack",
+                        "Desarrollador con experiencia en Java backend y React frontend. Trabajo con bases de datos relacionales.",
+                        new BigDecimal("2200000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e2));
+
+                Puesto p5 = puestoRepository.save(new Puesto(null, "Especialista en DevOps",
+                        "Experiencia en Docker, Kubernetes, CI/CD pipelines y administración de infraestructura en la nube.",
+                        new BigDecimal("2700000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e3));
+
+                Puesto p6 = puestoRepository.save(new Puesto(null, "Líder de Proyecto",
+                        "Coordinación y liderazgo de equipos de desarrollo. Experiencia en gestión de proyectos ágiles.",
+                        new BigDecimal("3000000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e3));
+
+                // Asignar características buscando por nombre (IDs seguros sin hardcodear)
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p1, "Java",                    4);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p1, "Spring Boot",             4);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p1, "PostgreSQL",              3);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p1, "Trabajo en equipo",       3);
+
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p2, "Figma",                   4);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p2, "Photoshop",               3);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p2, "UX Research",             3);
+
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p3, "Trabajo en equipo",       3);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p3, "Liderazgo",               2);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p3, "Resolución de problemas", 3);
+
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p4, "Java",                    3);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p4, "React",                   3);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p4, "PostgreSQL",              3);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p4, "Node.js",                 2);
+
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p5, "Docker",                  4);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p5, "Kubernetes",              4);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p5, "AWS",                     3);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p5, "GitHub Actions",          3);
+
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p6, "Liderazgo",               4);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p6, "Gestión del tiempo",      3);
+                link(puestoCaracteristicaRepository, caracteristicaRepository, p6, "Comunicación",            4);
+            }
         };
+    }
+
+    /** Busca la característica por nombre y la vincula al puesto con el nivel dado */
+    private void link(IPuestoCaracteristicaRepository pcRepo,
+                      ICaracteristicaRepository carRepo,
+                      Puesto puesto, String nombre, int nivel) {
+        carRepo.findByNombre(nombre).ifPresent(car ->
+                pcRepo.save(new PuestoCaracteristica(puesto, car, nivel)));
     }
 }
