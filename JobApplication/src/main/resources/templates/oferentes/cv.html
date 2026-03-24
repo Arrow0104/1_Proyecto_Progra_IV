@@ -10,45 +10,81 @@
 <main class="main-content">
   <h1 class="page-title">Mi Currículo (CV)</h1>
 
-  <div th:if="${param.msg}" class="alert alert-success" th:text="${param.msg}"></div>
-  <div th:if="${param.error}" class="alert alert-danger" th:text="${param.error}"></div>
+  <div th:if="${param.msg}"   class="alert alert-success" th:text="${param.msg}"></div>
+  <div th:if="${param.error}" class="alert alert-danger"  th:text="${param.error}"></div>
 
-  <div class="card" style="max-width:520px;">
+  <div class="card" style="max-width:560px;">
 
     <!-- Estado actual -->
     <h3 style="margin-bottom:1rem;">Estado actual del Currículo</h3>
     <div th:if="${oferente.cvPath != null and !#strings.isEmpty(oferente.cvPath)}">
-      <p class="text-success" style="margin-bottom:0.5rem;">✓ Ruta registrada:</p>
+      <p class="text-success" style="margin-bottom:0.5rem;">✓ CV registrado:</p>
       <code style="display:block;background:var(--bg-mid);padding:0.5rem 0.75rem;
                    border-radius:6px;font-size:0.88rem;word-break:break-all;
-                   color:var(--text-primary);margin-bottom:1rem;"
+                   color:var(--text-primary);margin-bottom:0.75rem;"
             th:text="${oferente.cvPath}">ruta/cv.pdf</code>
+      <!-- Si es ruta local del servidor, mostrar enlace de descarga -->
+      <a th:if="${#strings.startsWith(oferente.cvPath, '/cv/')}"
+         th:href="${oferente.cvPath}" target="_blank" class="btn btn-outline btn-sm mb-2">
+        Ver / Descargar CV
+      </a>
+      <!-- Si es URL externa -->
+      <a th:if="${#strings.startsWith(oferente.cvPath, 'http')}"
+         th:href="${oferente.cvPath}" target="_blank" class="btn btn-outline btn-sm mb-2">
+        Abrir CV externo
+      </a>
     </div>
     <p th:if="${oferente.cvPath == null or #strings.isEmpty(oferente.cvPath)}"
        class="text-muted" style="margin-bottom:1rem;">
-      No ha registrado ninguna ruta de currículo aún.
+      No ha subido ningún CV aún.
     </p>
 
     <hr class="divider"/>
 
-    <!-- Formulario para actualizar la ruta -->
-    <h3 style="margin-bottom:1rem;">Registrar / Actualizar Ruta del CV</h3>
-    <form th:action="@{/oferente/cv/guardar}" method="post">
+    <!-- ── Subir archivo PDF ──────────────────────────────────────── -->
+    <h3 style="margin-bottom:0.5rem;">Subir archivo PDF</h3>
+    <p class="text-muted" style="font-size:0.82rem;margin-bottom:1rem;">
+      Seleccione un archivo PDF desde su computadora. Este reemplazará el CV anterior.
+    </p>
+
+    <form th:action="@{/oferente/cv/subir}" method="post" enctype="multipart/form-data">
       <div class="form-group">
-        <label class="form-label" for="cvPath">Ruta o enlace del CV</label>
-        <input type="text" id="cvPath" name="cvPath" class="form-control"
-               th:value="${oferente.cvPath}"
-               placeholder="Ej: /cv/mi_curriculo.pdf o https://drive.google.com/..."
-               required/>
+        <label class="form-label" for="archivoCv">Archivo CV (PDF)</label>
+        <input type="file" id="archivoCv" name="archivoCv"
+               class="form-control"
+               accept="application/pdf,.pdf"
+               required
+               style="padding:0.45rem 0.7rem;cursor:pointer;"/>
         <small class="text-muted" style="font-size:0.82rem;">
-          Puede ingresar una ruta local del servidor o un enlace externo (Google Drive, LinkedIn, etc.)
+          Solo se aceptan archivos en formato PDF. Tamaño máximo: 10 MB.
         </small>
       </div>
       <div class="flex gap-1 mt-1">
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a th:href="@{/oferentes}" class="btn btn-outline">← Volver al Dashboard</a>
+        <button type="submit" class="btn btn-primary">Subir PDF</button>
       </div>
     </form>
+
+    <hr class="divider"/>
+
+    <!-- ── O ingresar URL/ruta manual (fallback) ─────────────────── -->
+    <details style="margin-top:0.5rem;">
+      <summary style="cursor:pointer;color:var(--text-muted);font-size:0.88rem;
+                      user-select:none;margin-bottom:0.75rem;">
+        O ingresar una URL / ruta manualmente
+      </summary>
+      <form th:action="@{/oferente/cv/guardar}" method="post" style="margin-top:0.75rem;">
+        <div class="form-group">
+          <label class="form-label" for="cvPath">Ruta o enlace del CV</label>
+          <input type="text" id="cvPath" name="cvPath" class="form-control"
+                 th:value="${oferente.cvPath}"
+                 placeholder="https://drive.google.com/... o /cv/mi_cv.pdf"/>
+        </div>
+        <button type="submit" class="btn btn-outline btn-sm">Guardar URL</button>
+      </form>
+    </details>
+
+    <hr class="divider"/>
+    <a th:href="@{/oferentes}" class="btn btn-outline btn-sm">← Volver al Dashboard</a>
   </div>
 </main>
 <th:block th:replace="~{fragments/layout :: footer}"/>

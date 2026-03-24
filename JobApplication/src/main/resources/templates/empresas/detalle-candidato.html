@@ -10,10 +10,12 @@
 <main class="main-content">
   <h1 class="page-title">Candidatos para el Puesto</h1>
   <p class="text-sec" style="margin-bottom:1.5rem;">
-    Puesto: <strong th:text="${puesto.titulo}" class="text-accent">Título</strong>
+    Puesto: <strong th:text="${puesto != null ? puesto.titulo : 'No especificado'}"
+                    class="text-accent">Título</strong>
   </p>
 
-  <div th:if="${param.msg}" class="alert alert-success" th:text="${param.msg}"></div>
+  <div th:if="${param.msg}"   class="alert alert-success" th:text="${param.msg}"></div>
+  <div th:if="${param.error}" class="alert alert-danger"  th:text="${param.error}"></div>
 
   <div class="table-wrapper">
     <table>
@@ -37,8 +39,8 @@
                 class="text-muted" style="font-size:0.85rem;">Sin CV</span>
         </td>
         <td>
-          <!-- Lista de habilidades del oferente -->
-          <div th:if="${!entry.value.isEmpty()}"
+          <!-- Lista de habilidades del oferente — con guarda de null/vacío -->
+          <div th:if="${entry.value != null and !entry.value.isEmpty()}"
                style="display:flex;flex-wrap:wrap;gap:0.3rem;">
             <span th:each="h : ${entry.value}"
                   class="badge badge-info"
@@ -46,7 +48,7 @@
               Habilidad
             </span>
           </div>
-          <span th:if="${entry.value.isEmpty()}"
+          <span th:if="${entry.value == null or entry.value.isEmpty()}"
                 class="text-muted" style="font-size:0.82rem;">Sin habilidades registradas</span>
         </td>
       </tr>

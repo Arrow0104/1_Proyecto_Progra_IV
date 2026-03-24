@@ -6,64 +6,58 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
   <h1 class="page-title">Reporte de Puestos por Mes</h1>
 
-  <!-- Selector de año -->
+  <div th:if="${param.msg}" class="alert alert-success" th:text="${param.msg}"></div>
+
+
   <div class="card" style="max-width:380px;margin-bottom:1.5rem;">
-    <form th:action="@{/admin/reportes/puestos}" method="get" class="flex gap-1 items-center">
+    <form th:action="@{/admin/reportes/puestos}" method="get"
+          style="display:flex;gap:1rem;align-items:flex-end;">
       <div class="form-group" style="margin:0;flex:1;">
         <label class="form-label" for="anio">Año del Reporte</label>
         <input type="number" id="anio" name="anio" class="form-control"
                th:value="${anio}" min="2020" max="2030"/>
       </div>
-      <button type="submit" class="btn btn-primary" style="margin-top:1.6rem;">Filtrar</button>
+      <button type="submit" class="btn btn-primary">Filtrar</button>
     </form>
   </div>
 
-  <!-- Tabla de datos -->
+
   <div class="table-wrapper" style="max-width:500px;margin-bottom:1.5rem;">
     <table>
       <thead>
       <tr>
         <th>Mes</th>
-        <th>Puestos Publicados</th>
+        <th style="text-align:center;">Puestos Publicados</th>
       </tr>
       </thead>
       <tbody>
-      <th:block th:with="meses=${ {'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'} }">
-        <th:block th:each="m, stat : ${meses}">
-          <tr>
-            <td th:text="${m}">Mes</td>
-            <td>
-              <!-- Buscar si hay datos para este mes -->
-              <th:block th:with="mesNum=${stat.index + 1}, cnt=0">
-                <th:block th:each="fila : ${datos}"
-                          th:with="filaMes=${fila[0]}">
-                                        <span th:if="${filaMes == mesNum}"
-                                              class="badge badge-info"
-                                              th:text="${fila[1]}">0</span>
-                </th:block>
-                <span class="text-muted" style="font-size:0.85rem;">0</span>
-              </th:block>
-            </td>
-          </tr>
-        </th:block>
-      </th:block>
+      <tr th:each="fila, stat : ${datos}">
+        <td th:text="${meses[stat.index]}">Mes</td>
+        <td style="text-align:center;">
+          <span th:if="${fila[1] != null and fila[1] > 0}"
+                class="badge badge-info"
+                th:text="${fila[1]}">0</span>
+          <span th:if="${fila[1] == null or fila[1] == 0}"
+                class="text-muted" style="font-size:0.85rem;">—</span>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Descargar PDF -->
-  <a th:href="@{/admin/reportes/puestos/pdf(anio=${anio})}" class="btn btn-primary btn-lg">
-    Descargar Reporte PDF
-  </a>
 
-  <div class="mt-2">
-    <a th:href="@{/admin/dashboard}" class="btn btn-outline">← Volver al Dashboard</a>
+  <div class="flex gap-1">
+    <a th:href="@{/admin/reportes/puestos/pdf(anio=${anio})}" class="btn btn-primary btn-lg">
+      ⬇ Descargar Reporte PDF
+    </a>
+    <a th:href="@{/usuarios}" class="btn btn-outline">← Volver al Dashboard</a>
   </div>
+
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>

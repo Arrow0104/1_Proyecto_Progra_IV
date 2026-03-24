@@ -50,7 +50,7 @@ public class OferenteController {
         return arbol;
     }
 
-    // ── Habilidades ──────────────────────────────────────────────────────────
+
 
     @GetMapping("/habilidades")
     public String habilidades(HttpSession session, Model model) {
@@ -105,28 +105,7 @@ public class OferenteController {
         return "redirect:/oferente/habilidades?msg=Habilidad%20eliminada";
     }
 
-    // ── CV ───────────────────────────────────────────────────────────────────
 
-    @GetMapping("/cv")
-    public String verCv(HttpSession session, Model model) {
-        Oferente oferente = getOferenteFromSession(session);
-        if (oferente == null) return "redirect:/login?error=Sesión%20no%20válida";
 
-        model.addAttribute("oferente", oferente);
-        model.addAttribute("pageTitle", "Mi Currículo");
-        return "oferentes/cv";
-    }
 
-    @Transactional
-    @PostMapping("/cv/guardar")
-    public String guardarCv(@RequestParam String cvPath, HttpSession session) {
-        Oferente oferente = getOferenteFromSession(session);
-        if (oferente == null) return "redirect:/login?error=Sesión%20no%20válida";
-
-        oferente.setCvPath(cvPath == null ? "" : cvPath.trim());
-        oferenteRepository.save(oferente);
-
-        log.info("CV actualizado para oferente={}", oferente.getIdOferente());
-        return "redirect:/oferente/cv?msg=CV%20actualizado%20correctamente";
-    }
 }

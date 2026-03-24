@@ -6,7 +6,7 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
   <h1 class="page-title">Candidatos para el Puesto</h1>
   <p class="text-sec" style="margin-bottom:1.5rem;">
@@ -31,7 +31,7 @@
           <span th:text="${c.porcentaje}" class="text-accent fw-bold">0%</span>
         </td>
         <td>
-          <a th:href="@{/templates/empresas/candidatos/{id}(id=${c.oferente.idOferente})}"
+          <a th:href="@{/empresa/candidatos/{id}(id=${c.oferente.idOferente})}"
              class="btn btn-outline btn-sm">Ver Detalle</a>
         </td>
       </tr>
@@ -45,9 +45,9 @@
   </div>
 
   <div class="mt-2">
-    <a th:href="@{/templates/empresas/puestos}" class="btn btn-outline">← Volver a Mis Puestos</a>
+    <a th:href="@{/empresas}" class="btn btn-outline">← Volver a Mis Puestos</a>
   </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>

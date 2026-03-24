@@ -6,15 +6,18 @@
   <link rel="stylesheet" th:href="@{/css/app.css}" href="../../static/css/app.css"/>
 </head>
 <body>
-<th:block th:replace="~{layout :: navbar}"/>
+<th:block th:replace="~{fragments/layout :: navbar}"/>
 <main class="main-content">
   <h1 class="page-title">Gestión de Características</h1>
 
+  <div th:if="${param.msg}"   class="alert alert-success" th:text="${param.msg}"></div>
+  <div th:if="${param.error}" class="alert alert-danger"  th:text="${param.error}"></div>
+
   <div style="display:grid;grid-template-columns:1fr 340px;gap:2rem;align-items:start;">
 
-    <!-- Árbol de características -->
+
     <div>
-      <!-- Mostrar raíces y permitir navegar -->
+      <!-- Mostrar raíces -->
       <div class="card" th:if="${padreActual == null}">
         <h3 style="margin-bottom:1rem;color:var(--accent);">Categorías Raíz</h3>
         <div class="table-wrapper">
@@ -47,7 +50,7 @@
         </div>
       </div>
 
-      <!-- Dentro de una categoría -->
+
       <div class="card" th:if="${padreActual != null}">
         <div class="breadcrumb">
           <a th:href="@{/admin/caracteristicas}">Raíces</a>
@@ -90,7 +93,7 @@
       </div>
     </div>
 
-    <!-- Agregar característica -->
+
     <div class="card">
       <h3 style="color:var(--accent);margin-bottom:1rem;">Agregar Característica</h3>
       <form th:action="@{/admin/caracteristicas/crear}" method="post">
@@ -118,6 +121,6 @@
 
   </div>
 </main>
-<th:block th:replace="~{layout :: footer}"/>
+<th:block th:replace="~{fragments/layout :: footer}"/>
 </body>
 </html>
