@@ -47,13 +47,13 @@ public class OferenteViewController {
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
         model.addAttribute("oferente", service.getOferenteById(id));
-        return "oferentes/habilidades";  // ← Gestionar habilidades
+        return "oferentes/habilidades";
     }
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("oferenteForm", new CreateOferenteRequest());
-        return "oferentes/cv";  // ← Subir CV
+        return "oferentes/cv";
     }
 
     @PostMapping
@@ -65,7 +65,7 @@ public class OferenteViewController {
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("oferenteForm", service.buildUpdateRequest(id));
-        return "oferentes/cv";  // ← Editar CV
+        return "oferentes/cv";
     }
 
     @PostMapping("/{id}")

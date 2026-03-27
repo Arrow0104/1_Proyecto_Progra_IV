@@ -81,7 +81,7 @@ public class AdminCaracteristicaController {
 
         Long padreId = (car.getPadre() != null) ? car.getPadre().getIdCaracteristica() : null;
 
-        // Verificar que no tenga hijos
+
         List<Caracteristica> hijos = caracteristicaRepository
                 .findByPadreIdCaracteristica(id);
         if (!hijos.isEmpty()) {

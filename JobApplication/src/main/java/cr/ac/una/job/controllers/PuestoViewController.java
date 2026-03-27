@@ -27,7 +27,7 @@ public class PuestoViewController {
         this.puestoCaracteristicaRepository = puestoCaracteristicaRepository;
     }
 
-    /** Construye mapa raiz -> hijos para el panel de filtros */
+
     private Map<Caracteristica, List<Caracteristica>> buildArbol() {
         List<Caracteristica> raices = caracteristicaRepository.findByPadreIsNull();
         Map<Caracteristica, List<Caracteristica>> arbol = new LinkedHashMap<>();
@@ -48,12 +48,12 @@ public class PuestoViewController {
         model.addAttribute("seleccionadas", caracteristicas != null ? caracteristicas : List.of());
 
         if (caracteristicas == null || caracteristicas.isEmpty()) {
-            // Sin filtro: mostrar todos los puestos activos
+
             List<Puesto> todos = puestoRepository.findByActiveTrue();
             model.addAttribute("resultados", todos);
             model.addAttribute("filtroActivo", false);
         } else {
-            // Con filtro: puestos que tengan AL MENOS UNA de las características
+
             List<Long> puestoIds = puestoCaracteristicaRepository
                     .findPuestoIdsByCaracteristicasIn(caracteristicas);
 

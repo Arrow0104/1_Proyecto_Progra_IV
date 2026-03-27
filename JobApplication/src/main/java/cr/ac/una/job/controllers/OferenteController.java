@@ -38,7 +38,7 @@ public class OferenteController {
         return oferenteRepository.findFirstByUsuarioIdUsuario(usuario.getIdUsuario()).orElse(null);
     }
 
-    /** Construye mapa raiz -> lista de hijos para el selector del formulario */
+
     private Map<Caracteristica, List<Caracteristica>> buildArbol() {
         List<Caracteristica> raices = caracteristicaRepository.findByPadreIsNull();
         Map<Caracteristica, List<Caracteristica>> arbol = new LinkedHashMap<>();

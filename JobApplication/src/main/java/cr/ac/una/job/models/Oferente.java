@@ -27,7 +27,7 @@ public class Oferente {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // Relación 0..1 con Usuario (según diagrama)
+
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;

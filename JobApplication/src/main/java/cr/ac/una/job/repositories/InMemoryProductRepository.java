@@ -19,7 +19,7 @@ public class InMemoryProductRepository implements IProductRepository {
 
     @PostConstruct
     public void init() {
-        // Initialize with some sample products
+
         save(new Product(null, "Laptop", 450000.0, true, LocalDateTime.now()));
         save(new Product(null, "Smartphone", 250000.0, true, LocalDateTime.now()));
         save(new Product(null, "Headphones", 50000.0, true, LocalDateTime.now()));

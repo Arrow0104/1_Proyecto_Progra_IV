@@ -8,10 +8,10 @@ import java.util.Optional;
 
 public interface ICaracteristicaRepository extends JpaRepository<Caracteristica, Long> {
 
-    // Todas las raíces (sin padre)
+
     List<Caracteristica> findByPadreIsNull();
 
-    // Hijos de un padre dado
+
     List<Caracteristica> findByPadreIdCaracteristica(Long padreId);
 
     Optional<Caracteristica> findByNombre(String nombre);

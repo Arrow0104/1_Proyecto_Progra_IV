@@ -49,7 +49,7 @@ public class OferenteCaracteristica {
     @Override
     public int hashCode() { return Objects.hash(oferente, caracteristica); }
 
-    // ── Clave compuesta ──────────────────────────────────────────────────────
+
     public static class OferenteCaracteristicaId implements Serializable {
         private Long oferente;
         private Long caracteristica;

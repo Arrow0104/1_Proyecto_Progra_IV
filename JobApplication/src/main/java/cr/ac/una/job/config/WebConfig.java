@@ -19,11 +19,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Ruta absoluta de la carpeta de uploads
+
         String uploadPath = Paths.get("uploads/cv/").toAbsolutePath().toUri().toString();
 
         registry.addResourceHandler("/cv/**")
-                // Primero busca PDFs empaquetados en el proyecto (demo), luego en uploads
+
                 .addResourceLocations("classpath:/static/cv/", uploadPath);
     }
 }

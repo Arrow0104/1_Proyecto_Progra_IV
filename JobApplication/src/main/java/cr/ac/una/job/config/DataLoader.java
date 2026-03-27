@@ -114,7 +114,7 @@ public class DataLoader {
                 caracteristicaRepository.save(new Caracteristica(null, "Gestión del tiempo", blandas));
             }
 
-            // ── 3) Puestos + características ─────────────────────────────────
+
             if (puestoRepository.count() == 0) {
                 Empresa e1 = empresaRepository.findAll().stream().findFirst().orElse(null);
                 Empresa e2 = empresaRepository.findAll().stream().skip(1).findFirst().orElse(e1);
@@ -144,7 +144,7 @@ public class DataLoader {
                         "Coordinación y liderazgo de equipos de desarrollo. Experiencia en gestión de proyectos ágiles.",
                         new BigDecimal("3000000"), EstadoPuesto.ACTIVO, true, LocalDateTime.now(), e3));
 
-                // Asignar características buscando por nombre (IDs seguros sin hardcodear)
+
                 link(puestoCaracteristicaRepository, caracteristicaRepository, p1, "Java",                    4);
                 link(puestoCaracteristicaRepository, caracteristicaRepository, p1, "Spring Boot",             4);
                 link(puestoCaracteristicaRepository, caracteristicaRepository, p1, "PostgreSQL",              3);
@@ -175,7 +175,7 @@ public class DataLoader {
         };
     }
 
-    /** Busca la característica por nombre y la vincula al puesto con el nivel dado */
+
     private void link(IPuestoCaracteristicaRepository pcRepo,
                       ICaracteristicaRepository carRepo,
                       Puesto puesto, String nombre, int nivel) {

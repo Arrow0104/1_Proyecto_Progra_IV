@@ -35,7 +35,7 @@ public class RegistroController {
         this.oferenteRepository = oferenteRepository;
     }
 
-    // ── Registro de Empresa ──────────────────────────────────────────────────
+
 
     @Transactional
     @PostMapping("/registro/empresa")
@@ -55,7 +55,7 @@ public class RegistroController {
             return "public/registro-empresa";
         }
 
-        // Identificación única: correo como base, con fallback si ya existe
+
         String identificacion = correoNorm;
         if (usuarioRepository.findByIdentificacion(identificacion).isPresent()) {
             identificacion = "emp_" + System.currentTimeMillis();
@@ -77,7 +77,7 @@ public class RegistroController {
         return "redirect:/login?msg=Empresa%20registrada.%20Espere%20la%20aprobaci%C3%B3n%20del%20administrador.";
     }
 
-    // ── Registro de Oferente ─────────────────────────────────────────────────
+
 
     @Transactional
     @PostMapping("/registro/oferente")
@@ -94,13 +94,13 @@ public class RegistroController {
 
         String correoNorm = correo.trim().toLowerCase();
 
-        // Validar correo único
+
         if (usuarioRepository.findByCorreo(correoNorm).isPresent()) {
             model.addAttribute("error", "Ya existe una cuenta con ese correo electrónico.");
             return "public/registro-oferente";
         }
 
-        // Determinar identificación única
+
         String identificacion = numIdentificacion.isBlank() ? correoNorm : numIdentificacion.trim();
         if (usuarioRepository.findByIdentificacion(identificacion).isPresent()) {
             if (!numIdentificacion.isBlank()) {
@@ -110,13 +110,13 @@ public class RegistroController {
             identificacion = "of_" + System.currentTimeMillis();
         }
 
-        // Nombre completo
+
         String nombreCompleto = nombre.trim();
         if (!apellido.isBlank()) {
             nombreCompleto = nombreCompleto + " " + apellido.trim();
         }
 
-        // 1. Guardar usuario y obtener el ID asignado por la BD
+
         Usuario usuario = new Usuario(
                 null, correoNorm, identificacion, password,
                 Rol.OFERENTE, EstadoUsuario.PENDIENTE, true, LocalDateTime.now()
@@ -124,7 +124,7 @@ public class RegistroController {
         usuario = usuarioRepository.save(usuario);
         log.info("Oferente usuario creado id={} correo={}", usuario.getIdUsuario(), correoNorm);
 
-        // 2. Crear oferente con referencia al usuario ya persistido
+
         Oferente oferente = new Oferente(
                 null,
                 nombreCompleto,

@@ -12,7 +12,7 @@ public class CreateOferenteRequest {
     @Size(min = 2, max = 120, message = "La residencia debe tener entre 2 y 120 caracteres")
     private String residencia;
 
-    // Puede ser null o vacío si aún no lo sube (según tu modelo actual)
+
     private String cvPath;
 
     public CreateOferenteRequest() {}

@@ -1,6 +1,5 @@
 /* ============================================================
-   Bolsa de Empleo — Hoja de Estilos Principal
-   Tema: Azul oscuro profundo + acentos dorados
+    Tema: Azul oscuro profundo + acentos dorados
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap');
@@ -28,7 +27,7 @@
     --transition:   0.22s ease;
 }
 
-/* ── Reset base ────────────────────────────────────────────── */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -45,7 +44,7 @@ body {
 a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
 a:hover { color: var(--accent-hover); }
 
-/* ── Navbar ─────────────────────────────────────────────────── */
+
 .navbar {
     background: var(--bg-nav);
     border-bottom: 2px solid var(--accent);
@@ -104,7 +103,7 @@ a:hover { color: var(--accent-hover); }
     color: var(--bg-dark) !important;
 }
 
-/* ── Contenido principal ────────────────────────────────────── */
+
 .main-content {
     flex: 1;
     padding: 2.5rem 2rem;
@@ -308,7 +307,7 @@ select.form-control option {
 
 textarea.form-control { resize: vertical; min-height: 90px; }
 
-/* ── Checkboxes jerárquicos ──────────────────────────────────── */
+
 .tree-list { list-style: none; padding: 0; }
 .tree-list li { margin: 0.3rem 0; }
 .tree-list .tree-parent > label {
@@ -335,7 +334,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 }
 .tree-list .tree-children li label:hover { color: var(--accent); }
 
-/* Checkbox personalizado */
+
 input[type="checkbox"] {
     accent-color: var(--accent);
     width: 15px;
@@ -492,7 +491,7 @@ tbody td {
     letter-spacing: 0.5px;
 }
 
-/* ── Detalles con hover tooltip (puestos públicos) ──────────── */
+
 .puesto-card-wrapper { position: relative; }
 .puesto-tooltip {
     display: none;
@@ -537,7 +536,7 @@ footer a:hover { color: var(--accent); }
 }
 @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
 
-/* ── Nivel slider ────────────────────────────────────────────── */
+
 input[type="range"] {
     accent-color: var(--accent);
     width: 100%;
@@ -550,14 +549,14 @@ input[type="range"] {
     margin-top: 0.3rem;
 }
 
-/* ── Separador ───────────────────────────────────────────────── */
+
 .divider {
     border: none;
     border-top: 1px solid var(--border);
     margin: 1.5rem 0;
 }
 
-/* ── Breadcrumb / ruta de característica ─────────────────────── */
+
 .breadcrumb {
     display: flex;
     align-items: center;
@@ -570,7 +569,7 @@ input[type="range"] {
 .breadcrumb span { color: var(--text-sec); }
 .breadcrumb .sep { color: var(--text-muted); }
 
-/* ── Utility classes ─────────────────────────────────────────── */
+
 .text-accent  { color: var(--accent); }
 .text-muted   { color: var(--text-muted); }
 .text-sec     { color: var(--text-sec); }

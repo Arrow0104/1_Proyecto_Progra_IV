@@ -42,7 +42,7 @@ public class EmpresaController {
         this.oferenteCaracteristicaRepository = oferenteCaracteristicaRepository;
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+
 
     private Empresa getEmpresaFromSession(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -59,7 +59,7 @@ public class EmpresaController {
         return arbol;
     }
 
-    // ── Puestos: formulario nuevo ────────────────────────────────────────────
+
 
     @GetMapping("/puestos/nuevo")
     public String formNuevo(HttpSession session, Model model) {
@@ -95,7 +95,7 @@ public class EmpresaController {
         return "redirect:/empresas?msg=Puesto%20publicado%20correctamente";
     }
 
-    // ── Puestos: editar ──────────────────────────────────────────────────────
+
 
     @GetMapping("/puestos/{id}/editar")
     public String formEditar(@PathVariable Long id, HttpSession session, Model model) {
@@ -106,7 +106,7 @@ public class EmpresaController {
         if (puesto == null || !puesto.getEmpresa().getIdEmpresa().equals(empresa.getIdEmpresa()))
             return "redirect:/empresas?error=Puesto%20no%20encontrado";
 
-        // IDs de características ya asignadas (para marcar checkboxes)
+
         List<Long> seleccionadas = puestoCaracteristicaRepository
                 .findByPuestoIdPuesto(id).stream()
                 .map(pc -> pc.getCaracteristica().getIdCaracteristica())
@@ -146,7 +146,7 @@ public class EmpresaController {
         puesto.setEstado(EstadoPuesto.valueOf(estado));
         puestoRepository.save(puesto);
 
-        // Reemplazar características: borrar las anteriores y guardar las nuevas
+
         puestoCaracteristicaRepository.deleteByPuestoIdPuesto(id);
         guardarCaracteristicasPuesto(puesto, idsCaracteristicas, allParams);
         log.info("Puesto editado id={}", id);
@@ -154,7 +154,7 @@ public class EmpresaController {
         return "redirect:/empresas?msg=Puesto%20actualizado%20correctamente";
     }
 
-    // ── Puestos: cerrar / activar ────────────────────────────────────────────
+
 
     @Transactional
     @PostMapping("/puestos/{id}/cerrar")
@@ -184,7 +184,7 @@ public class EmpresaController {
         return "redirect:/empresas?msg=Puesto%20reactivado";
     }
 
-    // ── Candidatos ───────────────────────────────────────────────────────────
+
 
     @GetMapping("/candidatos")
     public String verCandidatos(@RequestParam Long puestoId,
@@ -196,7 +196,7 @@ public class EmpresaController {
         if (puesto == null || !puesto.getEmpresa().getIdEmpresa().equals(empresa.getIdEmpresa()))
             return "redirect:/empresas?error=Puesto%20no%20encontrado";
 
-        // Mapa Oferente -> sus habilidades
+
         List<Oferente> todos = oferenteRepository.findByActiveTrue();
         Map<Oferente, List<OferenteCaracteristica>> candidatosConHabilidades = new LinkedHashMap<>();
         for (Oferente o : todos) {
@@ -211,7 +211,7 @@ public class EmpresaController {
         return "empresas/detalle-candidato";
     }
 
-    // ── Helper: guardar características de un puesto ─────────────────────────
+
 
     private void guardarCaracteristicasPuesto(Puesto puesto,
                                               List<Long> idsCaracteristicas,

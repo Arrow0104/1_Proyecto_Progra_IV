@@ -25,7 +25,7 @@ public class UsuarioViewController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // GET /usuarios → dashboard del admin con conteos reales
+
     @GetMapping
     public String list(Model model) {
         long pendientesEmpresa = usuarioRepository.findAll().stream()

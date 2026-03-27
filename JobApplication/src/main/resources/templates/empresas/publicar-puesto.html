@@ -14,7 +14,7 @@
 
   <div style="display:grid;grid-template-columns:1fr 340px;gap:2rem;align-items:start;">
 
-    <!-- Formulario principal -->
+
     <div class="card">
       <form th:action="${puestoId != null ? '/empresa/puestos/' + puestoId + '/editar' : '/empresa/puestos/nuevo'}"
             method="post" id="formPuesto">
@@ -57,7 +57,7 @@
       </form>
     </div>
 
-    <!-- Panel de características requeridas -->
+
     <div class="card">
       <h3 style="color:var(--accent);margin-bottom:0.5rem;">Características Requeridas</h3>
       <p class="text-muted" style="font-size:0.82rem;margin-bottom:1rem;">
@@ -101,7 +101,7 @@
           </div>
         </div>
 
-        <!-- Si la raíz no tiene hijos, mostrarla directamente -->
+
         <div th:if="${entry.value.isEmpty()}"
              style="padding:0.3rem 0;border-bottom:1px solid var(--border);">
           <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.88rem;">

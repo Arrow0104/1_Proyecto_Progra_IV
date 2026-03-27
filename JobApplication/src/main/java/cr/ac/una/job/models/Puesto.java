@@ -32,7 +32,7 @@ public class Puesto {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // En el diagrama, Empresa 1 -> 0..* Puesto
+
     @ManyToOne
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;

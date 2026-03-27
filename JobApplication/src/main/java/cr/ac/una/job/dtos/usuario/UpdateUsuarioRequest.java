@@ -18,11 +18,7 @@ public class UpdateUsuarioRequest {
     @Size(min = 5, max = 30, message = "La identificación debe tener entre 5 y 30 caracteres")
     private String identificacion;
 
-    /**
-     * En update la dejamos opcional:
-     * - null o blank => no se cambia
-     * - con texto => se actualiza
-     */
+
     @Size(min = 4, max = 100, message = "La contraseña debe tener entre 4 y 100 caracteres")
     private String password;
 

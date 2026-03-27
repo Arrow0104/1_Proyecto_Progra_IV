@@ -15,7 +15,7 @@ public interface IPuestoCaracteristicaRepository
 
     void deleteByPuestoIdPuesto(Long idPuesto);
 
-    // Buscar puestos que tengan AL MENOS UNA de las características dadas
+
     @Query("""
         SELECT DISTINCT pc.puesto.idPuesto
         FROM PuestoCaracteristica pc
@@ -24,7 +24,7 @@ public interface IPuestoCaracteristicaRepository
     """)
     List<Long> findPuestoIdsByCaracteristicasIn(@Param("ids") List<Long> ids);
 
-    // Buscar puestos que tengan TODAS las características dadas
+
     @Query("""
         SELECT pc.puesto.idPuesto
         FROM PuestoCaracteristica pc
