@@ -23,6 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
         String uploadPath = Paths.get("uploads/cv/").toAbsolutePath().toUri().toString();
 
         registry.addResourceHandler("/cv/**")
-                .addResourceLocations(uploadPath);
+                // Primero busca PDFs empaquetados en el proyecto (demo), luego en uploads
+                .addResourceLocations("classpath:/static/cv/", uploadPath);
     }
 }
